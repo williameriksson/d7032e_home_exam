@@ -8,7 +8,7 @@ public class Player {
   public int money = 200;
   public int knowledge = 0;
   public boolean computer = false;
-  public ArrayList<Integer> ownsTile = new ArrayList<Integer>();
+  public ArrayList<Tile> ownsTile = new ArrayList<Tile>();
   public boolean stillPlaying = true;
   public boolean skipOneTurn = false;
 
