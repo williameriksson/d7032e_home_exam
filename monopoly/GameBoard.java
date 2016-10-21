@@ -1,20 +1,22 @@
 package monopoly;
 import java.util.ArrayList;
+import java.util.Collections;
 
 class GameBoard {
   Player[] players;
   ArrayList<Tile> tiles;
   int nrOfTiles;
   int nrHorizTiles = 5;
-  int middleTiles = 4;
+  int nrMiddleRows = 2;
   int tileHeight = 5;
   int tileWidth = 9;
+  String border;
 
   GameBoard (Player[] players, ArrayList<Tile> tiles) {
     this.players = players;
     this.tiles = tiles;
     this.nrOfTiles = tiles.size();
-
+    this.border = new String(new char[this.tileWidth * this.nrHorizTiles + this.nrHorizTiles + 1]).replace("\0", "*") + "\n";
 
   }
 
@@ -62,15 +64,42 @@ class GameBoard {
     String partAsterix = new String(new char[this.tileWidth - 1]).replace("\0", "*");
     String emptyBoxLine = new String(new char[this.tileWidth - 2]).replace("\0", " ");
 
-    String border = new String(new char[this.tileWidth * this.nrHorizTiles + this.nrHorizTiles + 1]).replace("\0", "*") + "\n";
+
 
     // Print the top border
     System.out.print(border);
 
+    // Print the top tiles
     ArrayList<Tile> tempTopTiles = new ArrayList<Tile>(tiles.subList(0, this.nrHorizTiles));
     printFullTileRow(tempTopTiles);
 
+    // Print border for the bottom of the top tiles
     System.out.print(border);
+
+    boolean lastMidTiles = false;
+    for (int i = 0; i < this.nrMiddleRows; i++) {
+      ArrayList<Tile> tempMidTiles = new ArrayList<Tile>();
+
+      tempMidTiles.add(tiles.get(tiles.size() - 1 - i));
+      tempMidTiles.add(tiles.get(this.nrHorizTiles + i));
+
+      if (i == this.nrMiddleRows - 1 ) {
+        lastMidTiles = true;
+      }
+      printMiddleTileRow(tempMidTiles, lastMidTiles);
+    }
+
+    ArrayList<Tile> tempBotTiles = new ArrayList<Tile>(tiles.subList(
+                                                        this.nrHorizTiles + this.nrMiddleRows - 1,
+                                                        this.nrOfTiles - this.nrMiddleRows - 1));
+
+    Collections.reverse(tempBotTiles);
+    printFullTileRow(tempBotTiles);
+    System.out.print(this.border);
+
+
+    // ArrayList<Tile> tempMidTiles = new ArrayList<Tile>(tiles.subList(this.nrHorizTiles, this.nrHorizTiles + 2));
+
 
 
 
@@ -122,14 +151,15 @@ class GameBoard {
     }
   }
 
-  private void printMiddleTileRow(ArrayList<Tile> tileArr) {
-
+  private void printMiddleTileRow(ArrayList<Tile> tileArr, boolean lastMidTiles) {
+    String emptyTile = "*" + new String(new char[this.tileWidth]).replace("\0", " ");
+    String bottomOfTile = new String(new char[this.tileWidth + 2]).replace("\0", "*");
 
     Tile leftTile = tileArr.get(0);
     Tile rightTile = tileArr.get(1);
 
     String leftTileName = leftTile.tileName;
-    String rightTileName = rightTileName.tileName;
+    String rightTileName = rightTile.tileName;
 
     int leftTileNameLen = leftTileName.length();
     int rightTileNameLen = rightTileName.length();
@@ -142,16 +172,56 @@ class GameBoard {
 
     System.out.print("*" + lSpace + leftTileName + rSpace + "*");
 
-    String middleSpace = new String(new char[ leftEmptySpace / 2 ]).replace("\0", " ");
+    String middleSpace = new String(new char[this.tileWidth * (this.nrHorizTiles - 2) + 2]).replace("\0", " ");
+
+    System.out.print(middleSpace);
+
+    lSpace = new String(new char[ rightEmptySpace / 2 ]).replace("\0", " ");
+    rSpace = new String(new char[ rightEmptySpace / 2 + rightEmptySpace % 2 ]).replace("\0", " ");
+
+    System.out.print("*" + lSpace + rightTileName + rSpace + "* \n");
+
+    for (int j = 0; j < 4; j++) {
+
+      if (leftTile.tilePlayers.size() > j) {
+        Player player = leftTile.tilePlayers.get(j);
+        String playerName = player.name;
+        int playerNameLen = playerName.length();
+        int emptySpace = this.tileWidth - playerNameLen;
+
+        lSpace = new String(new char[ emptySpace / 2 ]).replace("\0", " ");
+        rSpace = new String(new char[ emptySpace / 2 + emptySpace % 2 ]).replace("\0", " ");
+
+        System.out.print("*" + lSpace + playerName + rSpace + "*");
+      } else {
+        System.out.print(emptyTile + "*");
+      }
+      System.out.print(middleSpace);
 
 
 
+      if (rightTile.tilePlayers.size() > j) {
+        Player player = rightTile.tilePlayers.get(j);
+        String playerName = player.name;
+        int playerNameLen = playerName.length();
+        int emptySpace = this.tileWidth - playerNameLen;
 
-    if (i == tileArr.size() - 1) {
-      System.out.print("* \n");
+        lSpace = new String(new char[ emptySpace / 2 ]).replace("\0", " ");
+        rSpace = new String(new char[ emptySpace / 2 + emptySpace % 2 ]).replace("\0", " ");
+
+        System.out.print("*" + lSpace + playerName + rSpace + "* \n");
+      } else {
+        System.out.print(emptyTile + "* \n");
+      }
+
     }
-
-
+      if (lastMidTiles) {
+        System.out.print(this.border);
+      } else {
+        System.out.print(bottomOfTile);
+        System.out.print(middleSpace);
+        System.out.print(bottomOfTile + "\n");
+      }
 
   }
 
