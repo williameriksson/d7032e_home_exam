@@ -60,22 +60,20 @@ class GameBoard {
     EXAM: Win if knowledge >=200 / Skip one turn
     A209/A210: Attend a workshop [buy: 20, rent 5, Increase knowledge by 4]
   */
-    String fullAsterix = new String(new char[this.tileWidth]).replace("\0", "*");
-    String partAsterix = new String(new char[this.tileWidth - 1]).replace("\0", "*");
-    String emptyBoxLine = new String(new char[this.tileWidth - 2]).replace("\0", " ");
-
-
 
     // Print the top border
-    System.out.print(border);
+    System.out.print(this.border);
 
     // Print the top tiles
     ArrayList<Tile> tempTopTiles = new ArrayList<Tile>(tiles.subList(0, this.nrHorizTiles));
     printFullTileRow(tempTopTiles);
 
     // Print border for the bottom of the top tiles
-    System.out.print(border);
+    System.out.print(this.border);
 
+    // Print the middle tiles. The boolean "lastMidTiles" is there to tell
+    // the function "printMiddleTileRow" if it should print a full border
+    // or just a border for the single tile.
     boolean lastMidTiles = false;
     for (int i = 0; i < this.nrMiddleRows; i++) {
       ArrayList<Tile> tempMidTiles = new ArrayList<Tile>();
@@ -89,17 +87,17 @@ class GameBoard {
       printMiddleTileRow(tempMidTiles, lastMidTiles);
     }
 
+    // Print the bottom tiles
     ArrayList<Tile> tempBotTiles = new ArrayList<Tile>(tiles.subList(
-                                                        this.nrHorizTiles + this.nrMiddleRows - 1,
-                                                        this.nrOfTiles - this.nrMiddleRows - 1));
+                                                        this.nrHorizTiles + this.nrMiddleRows,
+                                                        this.nrOfTiles - this.nrMiddleRows));
 
+    // We need to reverse the list to get the correct printing order
     Collections.reverse(tempBotTiles);
     printFullTileRow(tempBotTiles);
+
+    // Print the bottom border
     System.out.print(this.border);
-
-
-    // ArrayList<Tile> tempMidTiles = new ArrayList<Tile>(tiles.subList(this.nrHorizTiles, this.nrHorizTiles + 2));
-
 
 
 

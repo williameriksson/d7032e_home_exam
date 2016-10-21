@@ -1,5 +1,5 @@
 package monopoly;
-// import java.util.ArrayList;
+import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,6 +13,7 @@ public class LTUMonopoly {
 	public Player[] players;
 	public GameBoard gameBoard;
 	public LTUTiles tilesObject = new LTUTiles();
+	public ArrayList<Tile> tiles = tilesObject.tiles;
 	public String[] tileNames = new String[] {
 		"START", "StiL", "CHANCE", "Philm", "PARTY",
 		"A109", "A117", "LIBRARY", "B234Ske", "CHANCE",
@@ -66,7 +67,7 @@ public class LTUMonopoly {
 		this.tilesObject.tiles.get(0).tilePlayers.add(players[1]);
 		this.tilesObject.tiles.get(0).tilePlayers.add(players[2]);
 		this.tilesObject.tiles.get(0).tilePlayers.add(players[3]);
-		gameBoard = new GameBoard(this.players, this.tilesObject.tiles);
+		gameBoard = new GameBoard(this.players, this.tiles);
 
 
 
@@ -169,7 +170,11 @@ public class LTUMonopoly {
 		}
 
 		// 2.
-		rollDiceAndMove(player);
+		int newPosition = rollDice(player);
+		movePlayer(player, newPosition);
+		// if(!player.computer) {
+		// 	System.out.println(player.name + "rolls a " + roll + " and lands on " + tileNames[player.position]);
+		// }
 
 		// 3.
 		checkTileForPenalty(player);
@@ -213,14 +218,14 @@ public class LTUMonopoly {
 		switch(card) {
 			case 0:	System.out.println(player.name + "has decided to cram for the exam in the LIBRARY this turn and the next");
 					player.knowledge=player.knowledge + (4*board[7][4]);
-					player.position = 7;
+					movePlayer(player, 7);
 					player.skipOneTurn = true;
 					break;
 			case 1:	System.out.println(player.name + "has fallen ill. Go to START without collecting any study-time");
-					player.position=0;
+					movePlayer(player, 0);
 					break;
 			case 2: System.out.println(player.name + "has been given a VERBAL EXAM and moves to EXAM without losing a turn");
-					player.position=11;
+					movePlayer(player, 11);
 					if(player.knowledge >= 200) {
 						System.out.println(player.name + " PASSED THE EXAM AND WINS THE GAME! CONGRATULATIONS!");
 						System.exit(0);
@@ -237,12 +242,12 @@ public class LTUMonopoly {
 					}
 					player.ownsTile.add(new Integer(12));
 					player.ownsTile.add(new Integer(13));
-					player.position = 12;
+					movePlayer(player, 12);
 					player.knowledge = player.knowledge + board[player.position][4];
 					break;
 			case 4: System.out.println(player.name + "has passed out after a serious party.\n"+
 					player.name + "moves to PARTY, pays the costs, decreases knowledge, and skips one turn");
-					player.position = 4;
+					movePlayer(player, 4);
 					player.skipOneTurn = true;
 					player.knowledge = player.knowledge + board[player.position][4];
 					player.money = player.money - board[player.position][1];
@@ -287,16 +292,40 @@ public class LTUMonopoly {
 		}
 	}
 
-	private void rollDiceAndMove(Player player) {
-		// 2. Roll d6 dice and move that number of steps.
+	private int rollDice(Player player) {
 		int roll = random.nextInt(6) + 1;
-		player.position = player.position + roll;
-		if(player.position > 13) {
-			player.position = player.position - 14;
+		int lastPosition = this.tiles.size() - 1;
+		
+		if (roll + player.position > lastPosition) {
+			return roll - (lastPosition - player.position) - 1;
 		}
-		if(!player.computer) {
-			System.out.println(player.name + "rolls a " + roll + " and lands on " + tileNames[player.position]);
+		return roll + player.position;
+	}
+
+	private void movePlayer(Player player, int position) {
+		// 2. Roll d6 dice and move that number of steps.
+
+		Tile currentTile = this.tiles.get(player.position);
+		ArrayList<Player> currentPlayerArr = currentTile.tilePlayers;
+
+		// Remove the player from the current tile
+		String status = "NOT FOUND";
+		for (int i = 0; i < currentPlayerArr.size(); i++) {
+				if (currentPlayerArr.get(i) == player) {
+					currentPlayerArr.remove(i);
+					status = "FOUND";
+					break;
+				}
 		}
+		System.out.print(status);
+
+		player.position = position;
+		Tile destinationTile = this.tiles.get(player.position);
+		destinationTile.tilePlayers.add(player);
+
+
+
+
 		// 4. Increase or decrease your knowledge accordingly.
 		player.knowledge = player.knowledge + board[player.position][4];
 
@@ -308,6 +337,7 @@ public class LTUMonopoly {
 			player.setStillPlaying(false);
 		}
 	}
+
 
 	//Draw a text-representation of the game-board.
 }
