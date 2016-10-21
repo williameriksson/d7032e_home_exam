@@ -1,5 +1,6 @@
 package monopoly;
 import java.util.ArrayList;
+import monopoly.*;
 
 
 public class Player {
@@ -8,7 +9,7 @@ public class Player {
   public int money = 200;
   public int knowledge = 0;
   public boolean computer = false;
-  public ArrayList<Tile> ownsTile = new ArrayList<Tile>();
+  public ArrayList<Integer> ownsTile = new ArrayList<Integer>();
   public boolean stillPlaying = true;
   public boolean skipOneTurn = false;
 

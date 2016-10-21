@@ -1,13 +1,27 @@
 package monopoly;
-
+import java.util.ArrayList;
 
 class GameBoard {
   Player[] players;
-  GameBoard (Player[] players) {
+  ArrayList<Tile> tiles;
+  int nrOfTiles;
+  int topTiles = 5; //change this later.
+  int botTiles = 5;
+  int middleTiles = 4;
+  int tileHeight = 7;
+  int tileWidth = 11;
+
+  GameBoard (Player[] players, ArrayList<Tile> tiles) {
     this.players = players;
+    this.tiles = tiles;
+    this.nrOfTiles = tiles.size();
+
+
   }
 
   public void paintGameBoard() {
+
+
   /*
     ***************************************************
     *  START  *  StiL   * CHANCE  *  Philm  *  PARTY  *
@@ -45,31 +59,132 @@ class GameBoard {
     EXAM: Win if knowledge >=200 / Skip one turn
     A209/A210: Attend a workshop [buy: 20, rent 5, Increase knowledge by 4]
   */
+    String[][] boardTiles = new String[this.nrOfTiles + 2][];
+    String fullAsterix = new String(new char[tileWidth]).replace("\0", "*");
+    String partAsterix = new String(new char[tileWidth - 1]).replace("\0", "*");
+    String emptyBoxLine = new String(new char[tileWidth - 2]).replace("\0", " ");
 
-    String[][] boardTiles = new String[16][];
-    boardTiles[0] = new String[] {"***********", "*  START  *", "*         *", "***********"};
-    boardTiles[1] = new String[] {"**********", "  StiL   *", "         *", "**********"};
-    boardTiles[2] = new String[] {"**********", " CHANCE  *", "         *", "**********"};
-    boardTiles[3] = new String[] {"**********", "  Philm  *", "         *", "**********"};
-    boardTiles[4] = new String[] {"**********", "  PARTY  *", "         *", "**********"};
+    // Print the top part of the gameboard
+    for (int i = 0; i < topTiles; i++) {
+      String name = this.tiles.get(i).tileName;
+      int nameLength = name.length();
 
-    boardTiles[13] = new String[] {"", "*  A210   *", "*         *", "***********"}; //6 line tile
-    //Add 3 empty tiles (boardTiles[14/15]) in between while printing it on the screen
-    boardTiles[5] = new String[] {"", "  A109   *", "         *", "**********"}; //6 line tile
+      String lSpace;
+      String rSpace;
 
-    boardTiles[12] = new String[] {"", "*  A209   *", "*         *", ""}; //5 line tile
-    //Add 3 empty tiles (boardTiles[14/15]) in between while printing it on the screen
-    boardTiles[6] = new String[] {"", "  A117   *", "         *", ""}; //5 line tile
+      if (nameLength == this.tileWidth - 2) {
+        lSpace = new String(new char[0]).replace("\0", " ");
+        rSpace = new String(new char[0]).replace("\0", " ");
+      } else {
+        int emptySpace = this.tileWidth - nameLength - 2;
+        lSpace = new String(new char[ emptySpace / 2 ]).replace("\0", " ");
+        rSpace = new String(new char[ emptySpace / 2 + emptySpace % 2 ]).replace("\0", " ");
+      }
 
-    boardTiles[11] = new String[] {"***********", "*  EXAM   *", "*         *", "***********"};
-    boardTiles[10] = new String[] {"**********", "  E632   *", "         *", "**********"};
-    boardTiles[9] = new String[] {"**********", " CHANCE  *", "         *", "**********"};
-    boardTiles[8] = new String[] {"**********", " B234Ske *", "         *", "**********"};
-    boardTiles[7] = new String[] {"**********", " LIBRARY *", "         *", "**********"};
+      if (i == 0) {
+        // The first tile is a special case..
+        boardTiles[i] = new String[] {fullAsterix, "*" + lSpace + name + rSpace + "*", "*" + emptyBoxLine + "*", fullAsterix};
+      } else {
+        boardTiles[i] = new String[] {partAsterix, lSpace + name + rSpace + "*", emptyBoxLine + "*", partAsterix};
+      }
+
+    }
+
+    // Print the middle part of the gameboard
+    int middleIndex = topTiles;
+    for (int i = 0; i <= middleTiles / 2; i++) {
+
+      String leftName = this.tiles.get(middleIndex).tileName;
+      int leftNameLength = leftName.length();
+      String leftLSpace;
+      String leftRSpace;
+
+      if (leftNameLength == this.tileWidth - 2) {
+        leftLSpace = new String(new char[0]).replace("\0", " ");
+        leftRSpace = new String(new char[0]).replace("\0", " ");
+      } else {
+        int emptySpace = this.tileWidth - leftNameLength - 2;
+        leftLSpace = new String(new char[ emptySpace / 2 ]).replace("\0", " ");
+        leftRSpace = new String(new char[ emptySpace / 2 + emptySpace % 2 ]).replace("\0", " ");
+      }
+
+      String rightName = this.tiles.get(nrOfTiles - i - 1).tileName;
+      int rightNameLength = rightName.length();
+      String rightLSpace;
+      String rightRSpace;
+
+      if (rightNameLength == this.tileWidth - 2) {
+        rightLSpace = new String(new char[0]).replace("\0", " ");
+        rightRSpace = new String(new char[0]).replace("\0", " ");
+      } else {
+        int emptySpace = this.tileWidth - rightNameLength - 2;
+        rightLSpace = new String(new char[ emptySpace / 2 ]).replace("\0", " ");
+        rightRSpace = new String(new char[ emptySpace / 2 + emptySpace % 2 ]).replace("\0", " ");
+      }
+
+      // If we're on the last pieces of the middle part
+      if (i == (middleTiles / 2) - 1) {
+        boardTiles[this.nrOfTiles - i - 1] = new String[] {"", "*" + rightLSpace + rightName + rightRSpace + "*", "*" + emptyBoxLine + "*", ""};
+        boardTiles[middleIndex + i] = new String[] {"", leftLSpace + leftName + leftRSpace + "*",  emptyBoxLine + "*", ""};
+      } else {
+        boardTiles[this.nrOfTiles - i - 1] = new String[] {"", "*" + rightLSpace + rightName + rightRSpace + "*", "*" + emptyBoxLine + "*", fullAsterix};
+        boardTiles[middleIndex + i] = new String[] {"", leftLSpace + leftName + leftRSpace + "*",  emptyBoxLine + "*", partAsterix + ""};
+      }
+
+    }
+
+
+    // Print the bottom tiles of the gameboard
+    int botIndex = middleIndex + (middleTiles / 2);
+    for (int i = 0; i < botTiles; i++) {
+      String name = this.tiles.get(botIndex + i).tileName;
+      int nameLength = name.length();
+
+      String lSpace;
+      String rSpace;
+
+      if (nameLength == this.tileWidth - 2) {
+        lSpace = new String(new char[0]).replace("\0", " ");
+        rSpace = new String(new char[0]).replace("\0", " ");
+      } else {
+        int emptySpace = this.tileWidth - nameLength - 2;
+        lSpace = new String(new char[ emptySpace / 2 ]).replace("\0", " ");
+        rSpace = new String(new char[ emptySpace / 2 + emptySpace % 2 ]).replace("\0", " ");
+      }
+
+      if (i == botTiles - 1) {
+        // The bottom left tile is a special case..
+        boardTiles[botIndex + i] = new String[] {fullAsterix, "*" + lSpace + name + rSpace + "*", "*" + emptyBoxLine + "*", fullAsterix};
+      } else {
+        boardTiles[botIndex + i] = new String[] {partAsterix, lSpace + name + rSpace + "*", emptyBoxLine + "*", partAsterix};
+      }
+
+    }
+
+    // boardTiles[7] = new String[] {"**********", " LIBRARY *", "         *", "**********"};
+    // boardTiles[8] = new String[] {"**********", " B234Ske *", "         *", "**********"};
+    // boardTiles[9] = new String[] {"**********", " CHANCE  *", "         *", "**********"};
+    // boardTiles[10] = new String[] {"**********", "  E632   *", "         *", "**********"};
+    // boardTiles[11] = new String[] {"***********", "*  EXAM   *", "*         *", "***********"};
 
     //Empty board tiles
-    boardTiles[14] = new String[] {"          ", "          ", "          ", "          "};
-    boardTiles[15] = new String[] {"         *", "         *", "         *", "         *"};
+    String emptyLineSpace = new String(new char[tileWidth - 1]).replace("\0", " ");
+    boardTiles[this.boardTiles.size() - 2] = new String[] {emptyLineSpace, emptyLineSpace, emptyLineSpace, emptyLineSpace};
+    boardTiles[this.boardTiles.size() - 1] = new String[] {emptyBoxLine + "*", emptyBoxLine + "*", emptyBoxLine + "*", emptyBoxLine + "*"};
+
+    int[] printorder = new int[this.nrOfTiles + (this.middleTiles / 2) *  3];
+
+    int index = 0;
+    for (index; index < this.topTiles; index++) {
+      printorder[index] = index;
+    }
+
+    for (int i = 0; i <= this.middleTiles / 2; i++) {
+      printorder[index + i] = this.tiles.size() - i - 1;
+      printorder[index + i] =
+    }
+
+
 
     int[] printorder = new int[] {0, 1, 2, 3, 4, 13, 14, 14, 15, 5, 12, 14, 14, 15, 6, 11, 10, 9, 8, 7};
 

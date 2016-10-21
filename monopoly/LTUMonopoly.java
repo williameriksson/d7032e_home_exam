@@ -5,13 +5,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Random;
 
-// import static monopoly.GameBoard.paintGameBoard;
+
 
 
 public class LTUMonopoly {
 	BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 	public Player[] players;
 	public GameBoard gameBoard;
+	public LTUTiles tilesObject = new LTUTiles();
 	public String[] tileNames = new String[] {
 		"START", "StiL", "CHANCE", "Philm", "PARTY",
 		"A109", "A117", "LIBRARY", "B234Ske", "CHANCE",
@@ -49,7 +50,7 @@ public class LTUMonopoly {
 	public LTUMonopoly(String[] playerNames) {
 		//There are always 4 players
 		players = new Player[4];
-		gameBoard = new GameBoard(this.players);
+		gameBoard = new GameBoard(this.players, this.tilesObject.tiles);
 		//Fill up with computer players
 		int computerID = 1;
 		for(int i=0; i<4; i++) {
