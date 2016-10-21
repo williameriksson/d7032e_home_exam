@@ -1,4 +1,6 @@
 package monopoly;
+import java.util.ArrayList;
+
 
 class Tile {
   String tileName;
@@ -7,6 +9,7 @@ class Tile {
   int price = 0;
   int rent = 0;
   int knowledge = 0;
+  ArrayList<Player> tilePlayers= new ArrayList<Player>();
 
   Tile (String tileName) {
     this.tileName = tileName;

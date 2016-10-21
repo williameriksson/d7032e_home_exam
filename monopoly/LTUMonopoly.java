@@ -50,7 +50,7 @@ public class LTUMonopoly {
 	public LTUMonopoly(String[] playerNames) {
 		//There are always 4 players
 		players = new Player[4];
-		gameBoard = new GameBoard(this.players, this.tilesObject.tiles);
+
 		//Fill up with computer players
 		int computerID = 1;
 		for(int i=0; i<4; i++) {
@@ -62,6 +62,13 @@ public class LTUMonopoly {
 				computerID++;
 			}
 		}
+		this.tilesObject.tiles.get(0).tilePlayers.add(players[0]);
+		this.tilesObject.tiles.get(0).tilePlayers.add(players[1]);
+		this.tilesObject.tiles.get(0).tilePlayers.add(players[2]);
+		this.tilesObject.tiles.get(0).tilePlayers.add(players[3]);
+		gameBoard = new GameBoard(this.players, this.tilesObject.tiles);
+
+
 
 		//New game is started: show the gameBoard.
 		gameBoard.paintGameBoard();
