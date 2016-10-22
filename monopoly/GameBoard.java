@@ -128,8 +128,8 @@ class GameBoard {
       for (int i = 0; i < tileArr.size(); i++) {
         Tile tile = tileArr.get(i);
 
-        if (tile.tilePlayers.size() > j) {
-          Player player = tile.tilePlayers.get(j);
+        if (tile.playerArr.size() > j) {
+          Player player = tile.playerArr.get(j);
           String playerName = player.name;
           int playerNameLen = playerName.length();
           int emptySpace = this.tileWidth - playerNameLen;
@@ -181,8 +181,8 @@ class GameBoard {
 
     for (int j = 0; j < 4; j++) {
 
-      if (leftTile.tilePlayers.size() > j) {
-        Player player = leftTile.tilePlayers.get(j);
+      if (leftTile.playerArr.size() > j) {
+        Player player = leftTile.playerArr.get(j);
         String playerName = player.name;
         int playerNameLen = playerName.length();
         int emptySpace = this.tileWidth - playerNameLen;
@@ -198,8 +198,8 @@ class GameBoard {
 
 
 
-      if (rightTile.tilePlayers.size() > j) {
-        Player player = rightTile.tilePlayers.get(j);
+      if (rightTile.playerArr.size() > j) {
+        Player player = rightTile.playerArr.get(j);
         String playerName = player.name;
         int playerNameLen = playerName.length();
         int emptySpace = this.tileWidth - playerNameLen;

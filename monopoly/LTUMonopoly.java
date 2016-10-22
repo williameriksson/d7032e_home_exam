@@ -63,10 +63,10 @@ public class LTUMonopoly {
 				computerID++;
 			}
 		}
-		this.tilesObject.tiles.get(0).tilePlayers.add(players[0]);
-		this.tilesObject.tiles.get(0).tilePlayers.add(players[1]);
-		this.tilesObject.tiles.get(0).tilePlayers.add(players[2]);
-		this.tilesObject.tiles.get(0).tilePlayers.add(players[3]);
+		this.tilesObject.tiles.get(0).playerArr.add(players[0]);
+		this.tilesObject.tiles.get(0).playerArr.add(players[1]);
+		this.tilesObject.tiles.get(0).playerArr.add(players[2]);
+		this.tilesObject.tiles.get(0).playerArr.add(players[3]);
 		gameBoard = new GameBoard(this.players, this.tiles);
 
 
@@ -295,7 +295,7 @@ public class LTUMonopoly {
 	private int rollDice(Player player) {
 		int roll = random.nextInt(6) + 1;
 		int lastPosition = this.tiles.size() - 1;
-		
+
 		if (roll + player.position > lastPosition) {
 			return roll - (lastPosition - player.position) - 1;
 		}
@@ -306,25 +306,19 @@ public class LTUMonopoly {
 		// 2. Roll d6 dice and move that number of steps.
 
 		Tile currentTile = this.tiles.get(player.position);
-		ArrayList<Player> currentPlayerArr = currentTile.tilePlayers;
+		ArrayList<Player> currentPlayerArr = currentTile.playerArr;
 
 		// Remove the player from the current tile
-		String status = "NOT FOUND";
 		for (int i = 0; i < currentPlayerArr.size(); i++) {
 				if (currentPlayerArr.get(i) == player) {
 					currentPlayerArr.remove(i);
-					status = "FOUND";
 					break;
 				}
 		}
-		System.out.print(status);
 
 		player.position = position;
 		Tile destinationTile = this.tiles.get(player.position);
-		destinationTile.tilePlayers.add(player);
-
-
-
+		destinationTile.playerArr.add(player);
 
 		// 4. Increase or decrease your knowledge accordingly.
 		player.knowledge = player.knowledge + board[player.position][4];
