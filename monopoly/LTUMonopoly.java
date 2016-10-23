@@ -285,7 +285,7 @@ public class LTUMonopoly {
 		return roll + player.position;
 	}
 
-	private Tile movePlayer(Player player, int position) {
+	public Tile movePlayer(Player player, int position) {
 		// 2. Roll d6 dice and move that number of steps.
 
 		Tile currentTile = this.tiles.get(player.position);

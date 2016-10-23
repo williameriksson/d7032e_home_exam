@@ -1,5 +1,6 @@
 package monopoly;
 import java.util.ArrayList;
+// import monopoly.LTUMonopoly;
 
 
 class LTUTiles {
@@ -7,6 +8,9 @@ class LTUTiles {
 
 
   LTUTiles() {
+
+
+
     Tile start = new Tile("START");
     start.reward = 40;
 
@@ -16,6 +20,7 @@ class LTUTiles {
     stil.rent = 2;
 
     Tile chance1 = new Tile("CHANCE");
+
 
     Tile philm = new Tile("Philm");
     philm.forSale = true;
@@ -48,6 +53,7 @@ class LTUTiles {
     b234ske.knowledge = 3;
 
     Tile chance2 = new Tile("CHANCE");
+
 
     Tile e632 = new Tile("E632");
     e632.forSale = true;
@@ -86,6 +92,19 @@ class LTUTiles {
       add(a209);
       add(a210);
     }};
+
+    ArrayList<ChanceCard> chanceCardList = new ArrayList<ChanceCard>();
+
+    LibraryCard libraryCard = new LibraryCard(this.tiles);
+    chanceCardList.add(libraryCard);
+
+    LTUChanceCards ltuChanceCards = new LTUChanceCards(chanceCardList);
+    ChanceFeature chanceFeature = new ChanceFeature(ltuChanceCards);
+    
+    chance1.tileFeature = chanceFeature;
+    chance2.tileFeature = chanceFeature;
+
+
   }
 
 }
@@ -103,5 +122,47 @@ class ExamFeature implements TileFeature {
       player.skipOneTurn = true;
     }
   }
+}
 
+class ChanceFeature implements TileFeature {
+
+  ChanceCards cards;
+  public ChanceFeature (ChanceCards cards) {
+    this.cards = cards;
+  }
+  @Override
+  public void run (Player player) {
+    this.cards.drawCard(player);
+
+  }
+}
+
+
+
+class LTUChanceCards extends ChanceCards {
+
+   protected LTUChanceCards (ArrayList<ChanceCard> cards) {
+     super(cards);
+   }
+}
+
+
+class LibraryCard extends ChanceCard {
+
+  public LibraryCard (ArrayList<Tile> tiles) {
+    super(tiles);
+  }
+
+  @Override
+  public void cardFunctionality (Player player) {
+    System.out.println(player.name + "has decided to cram for the exam in the LIBRARY this turn and the next");
+
+    int libraryPosition = getTileIndexByName("LIBRARY");
+    Tile libraryTile = this.tiles.get(libraryPosition);
+
+		player.knowledge += 4 * libraryTile.knowledge;
+		// movePlayer(player, libraryPosition);
+		player.skipOneTurn = true;
+
+  }
 }
