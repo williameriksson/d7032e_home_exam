@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Optional;
 import java.util.Random;
 
 
@@ -159,7 +160,8 @@ public class LTUMonopoly {
 
 		// exit 2. Win the game if you have >= 200 knowledge and stand at EXAM
 		if (currentTile.tileFeature != null) {
-			currentTile.tileFeature.run(player);
+			Optional<Integer> newPositionFromCard = currentTile.tileFeature.run(player);
+			newPositionFromCard.ifPresent(nPos -> movePlayer(player, nPos));
 		}
 	}
 		// 6. Draw a Chance card on the CHANCE tile and follow the text

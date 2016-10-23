@@ -1,6 +1,6 @@
 package monopoly;
 import java.util.ArrayList;
-// import monopoly.LTUMonopoly;
+import java.util.Optional;
 
 
 class LTUTiles {
@@ -100,7 +100,7 @@ class LTUTiles {
 
     LTUChanceCards ltuChanceCards = new LTUChanceCards(chanceCardList);
     ChanceFeature chanceFeature = new ChanceFeature(ltuChanceCards);
-    
+
     chance1.tileFeature = chanceFeature;
     chance2.tileFeature = chanceFeature;
 
@@ -113,7 +113,7 @@ class LTUTiles {
 class ExamFeature implements TileFeature {
 
   @Override
-  public void run (Player player) {
+  public Optional<Integer> run (Player player) {
     if (player.knowledge >= 200) {
       System.out.println(player.name + " PASSED THE EXAM AND WINS THE GAME! CONGRATULATIONS!");
       System.exit(0);
@@ -121,19 +121,20 @@ class ExamFeature implements TileFeature {
       System.out.println(player.name + " had not studied enough for the exam and have to take a re-exam. Skip one turn");
       player.skipOneTurn = true;
     }
+    return Optional.empty();
   }
 }
 
 class ChanceFeature implements TileFeature {
-
   ChanceCards cards;
   public ChanceFeature (ChanceCards cards) {
     this.cards = cards;
   }
-  @Override
-  public void run (Player player) {
-    this.cards.drawCard(player);
 
+  @Override
+  public Optional<Integer> run (Player player) {
+    Optional<Integer> newPosition = this.cards.drawCard(player);
+    return newPosition;
   }
 }
 
@@ -154,15 +155,15 @@ class LibraryCard extends ChanceCard {
   }
 
   @Override
-  public void cardFunctionality (Player player) {
+  public Optional<Integer> cardFunctionality (Player player) {
     System.out.println(player.name + "has decided to cram for the exam in the LIBRARY this turn and the next");
 
     int libraryPosition = getTileIndexByName("LIBRARY");
     Tile libraryTile = this.tiles.get(libraryPosition);
 
 		player.knowledge += 4 * libraryTile.knowledge;
-		// movePlayer(player, libraryPosition);
 		player.skipOneTurn = true;
+		return Optional.of(new Integer(libraryPosition));
 
   }
 }

@@ -1,5 +1,7 @@
 package monopoly;
+import java.util.Optional;
+
 public interface TileFeature {
 
-  public void run(Player player);
+  public Optional<Integer> run(Player player);
 }

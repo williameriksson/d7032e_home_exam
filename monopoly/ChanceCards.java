@@ -1,6 +1,7 @@
 package monopoly;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Optional;
 
 
 public abstract class ChanceCards {
@@ -12,10 +13,10 @@ public abstract class ChanceCards {
     this.chanceCards = chanceCards;
   }
 
-  public void drawCard(Player player) {
+  public Optional<Integer> drawCard(Player player) {
     int cardIndex = random.nextInt(this.chanceCards.size());
     ChanceCard drawnCard = this.chanceCards.get(cardIndex);
-    drawnCard.cardFunctionality(player);
+    return drawnCard.cardFunctionality(player);
   }
 
 }
