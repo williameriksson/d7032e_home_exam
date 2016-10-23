@@ -11,12 +11,14 @@ class LTUTiles {
     start.reward = 40;
 
     Tile stil = new Tile("StiL");
+    stil.forSale = true;
     stil.price = 6;
     stil.rent = 2;
 
     Tile chance1 = new Tile("CHANCE");
 
     Tile philm = new Tile("Philm");
+    philm.forSale = true;
     philm.price = 6;
     philm.rent = 2;
 
@@ -25,19 +27,22 @@ class LTUTiles {
     party.knowledge = -8;
 
     Tile a109 = new Tile("A109");
+    a109.forSale = true;
     a109.price = 10;
     a109.rent = 3;
     a109.knowledge = 3;
 
     Tile a117 = new Tile("A117");
-    a109.price = 10;
-    a109.rent = 3;
-    a109.knowledge = 3;
+    a117.forSale = true;
+    a117.price = 10;
+    a117.rent = 3;
+    a117.knowledge = 3;
 
     Tile library = new Tile("LIBRARY");
     library.knowledge = 8;
 
     Tile b234ske = new Tile("B234Ske");
+    b234ske.forSale = true;
     b234ske.price = 10;
     b234ske.rent = 3;
     b234ske.knowledge = 3;
@@ -45,18 +50,22 @@ class LTUTiles {
     Tile chance2 = new Tile("CHANCE");
 
     Tile e632 = new Tile("E632");
+    e632.forSale = true;
     e632.price = 10;
     e632.rent = 3;
     e632.knowledge = 3;
 
     Tile exam = new Tile("EXAM");
+    exam.tileFeature = new ExamFeature();
 
     Tile a209 = new Tile("A209");
+    a209.forSale = true;
     a209.price = 20;
     a209.rent = 5;
     a209.knowledge = 4;
 
     Tile a210 = new Tile("A210");
+    a210.forSale = true;
     a210.price = 20;
     a210.rent = 5;
     a210.knowledge = 4;
@@ -77,6 +86,22 @@ class LTUTiles {
       add(a209);
       add(a210);
     }};
+  }
+
+}
+
+
+class ExamFeature implements TileFeature {
+
+  @Override
+  public void run (Player player) {
+    if (player.knowledge >= 200) {
+      System.out.println(player.name + " PASSED THE EXAM AND WINS THE GAME! CONGRATULATIONS!");
+      System.exit(0);
+    } else {
+      System.out.println(player.name + " had not studied enough for the exam and have to take a re-exam. Skip one turn");
+      player.skipOneTurn = true;
+    }
   }
 
 }

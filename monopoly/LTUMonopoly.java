@@ -14,29 +14,6 @@ public class LTUMonopoly {
 	public GameBoard gameBoard;
 	public LTUTiles tilesObject = new LTUTiles();
 	public ArrayList<Tile> tiles = tilesObject.tiles;
-	public String[] tileNames = new String[] {
-		"START", "StiL", "CHANCE", "Philm", "PARTY",
-		"A109", "A117", "LIBRARY", "B234Ske", "CHANCE",
-		"E632", "EXAM", "A209", "A210"
-	};
-	public int[][] board = new int[][]
-	{
-		//{get, pay, buy, rent, knowledge}
-		  {40 , 0  , 0  , 0   , 0}, //START
-		  {0  , 0  , 6  , 2   , 0}, //StiL
-		  {0  , 0  , 0  , 0   , 0}, //CHANCE
-		  {0  , 0  , 6  , 2   , 0}, //Philm
-		  {0  , 18 , 0  , 0   , -8},//PARTY
-		  {0  , 0  , 10 , 3   , 3}, //A109
-		  {0  , 0  , 10 , 3   , 3}, //A117
-		  {0  , 0  , 0  , 0   , 8}, //LIBRARY
-		  {0  , 0  , 10 , 3   , 3}, //B234Ske
-		  {0  , 0  , 0  , 0   , 0}, //CHANCE
-		  {0  , 0  , 10 , 3   , 3}, //E632
-		  {0  , 0  , 0  , 0   , 0}, //EXAM
-		  {0  , 0  , 20 , 5   , 4}, //A209
-		  {0  , 0  , 20 , 5   , 4}  //A210
-	};
 	public Random random = new Random();
 
 	public static void main(String argv[]) {
@@ -140,125 +117,108 @@ public class LTUMonopoly {
 		}
 
 		int pos = player.position;
+		Tile currentTile = tiles.get(pos);
 		// 1. In the beginning of your turn you may opt to buy unowned property
 		// First check if the current tile is unowned - offer player to buy
-		if(pos == 1||pos == 3||pos == 5||pos == 6||pos == 8||pos == 10||pos == 12||pos == 13) {
-			//board[][get, pay, buy, rent, knowledge]
-			if(checkOwned(pos) == null && !player.computer) {
-				System.out.print("Do you want to buy " + tileNames[pos] + " for " + board[pos][2] +
-					" and rent " + board[pos][3] + "? [y/n] \nYou currently have " + player.money + " study-time\n");
+		if (currentTile.forSale && currentTile.owner == null) {
+			boolean canAfford = (player.money > currentTile.price) ? true : false;
+
+			if (!player.computer) {
+				System.out.print("Do you want to buy " + currentTile.tileName + " for " + currentTile.price +
+					" and rent " + currentTile.rent + "? [y/n] \nYou currently have " + player.money + " study-time\n");
 				String choice = "";
-				try{
+
+				try {
 					while(!((choice = bufferedReader.readLine()).equals("y") || choice.equals("n"))){
 						System.out.println("Yes [y] or No [n]");
 					}
-				} catch (Exception e) {};
+				} catch (Exception e) {
+						System.out.println(e);
+				};
+
 				if (choice.equals("y")) {
-					if(player.money-board[pos][2] > 0) {
-						player.ownsTile.add(new Integer(pos));
-						player.money = player.money-board[pos][2];
-						System.out.println(player.name + "bought " + tileNames[pos]);
-					}
-				} else {System.out.println("You can not afford " + tileNames[pos]);}
-			} else if(checkOwned(pos) == null && player.computer) { //Computers always buy property if it is available
-				if(player.money-board[pos][2] > 0) {
-					player.ownsTile.add(new Integer(pos));
-					player.money = player.money-board[pos][2];
-					System.out.println(player.name + "bought " + tileNames[pos]);
+					buyTile(player, currentTile);
 				}
+			} else if (player.computer && canAfford) {
+				buyTile(player, currentTile);
 			}
 		}
 
-		// 2.
+
+		// 2. Roll dice and move player;
 		int newPosition = rollDice(player);
-		movePlayer(player, newPosition);
+		currentTile = movePlayer(player, newPosition);
+
 		// if(!player.computer) {
 		// 	System.out.println(player.name + "rolls a " + roll + " and lands on " + tileNames[player.position]);
 		// }
 
-		// 3.
+		// 3. Check if the tile brings and penalty to the player;
 		checkTileForPenalty(player);
-
-    // 4. moved to checkTileForPenalty
-
-		// 5. moved to checkTileForPenalty
 
 
 		// exit 2. Win the game if you have >= 200 knowledge and stand at EXAM
-		if(player.position == 11) {
-			if (player.knowledge >= 200) {
-				System.out.println(player.name + " PASSED THE EXAM AND WINS THE GAME! CONGRATULATIONS!");
-				System.exit(0);
-			} else {
-				System.out.println(player.name + " had not studied enough for the exam and have to take a re-exam. Skip one turn");
-				player.skipOneTurn = true;
-			}
+		if (currentTile.tileFeature != null) {
+			currentTile.tileFeature.run(player);
 		}
-
+	}
 		// 6. Draw a Chance card on the CHANCE tile and follow the text
-		if(player.position == 2 || player.position == 9) {
-			drawChanceCard(player);
-		}
-
-		System.out.println(player.name + " has " + player.money + " study-time and " + player.knowledge + " knowledge");
-	}
-
-	public Player checkOwned(int pos) {
-		for(int i=0; i<players.length; i++) {
-			if(players[i].ownsTile.contains(new Integer(pos))) {
-				return players[i];
-			}
-		}
-		return null;
-	}
-
-	public void drawChanceCard(Player player) {
-		int card = random.nextInt(5);
-		//board[][get, pay, buy, rent, knowledge]
-		switch(card) {
-			case 0:	System.out.println(player.name + "has decided to cram for the exam in the LIBRARY this turn and the next");
-					player.knowledge=player.knowledge + (4*board[7][4]);
-					movePlayer(player, 7);
-					player.skipOneTurn = true;
-					break;
-			case 1:	System.out.println(player.name + "has fallen ill. Go to START without collecting any study-time");
-					movePlayer(player, 0);
-					break;
-			case 2: System.out.println(player.name + "has been given a VERBAL EXAM and moves to EXAM without losing a turn");
-					movePlayer(player, 11);
-					if(player.knowledge >= 200) {
-						System.out.println(player.name + " PASSED THE EXAM AND WINS THE GAME! CONGRATULATIONS!");
-						System.exit(0);
-					}
-					break;
-			case 3: System.out.println(player.name + "\"PWNZ\" at the workshops.\n" +
-					player.name + "gains ownership of A209 and A210, moves to A209 and collects the knowledge");
-					Player owner;
-					if((owner = checkOwned(12)) != null) {
-						owner.ownsTile.remove(new Integer(12));
-					}
-					if((owner = checkOwned(13)) != null) {
-						owner.ownsTile.remove(new Integer(13));
-					}
-					player.ownsTile.add(new Integer(12));
-					player.ownsTile.add(new Integer(13));
-					movePlayer(player, 12);
-					player.knowledge = player.knowledge + board[player.position][4];
-					break;
-			case 4: System.out.println(player.name + "has passed out after a serious party.\n"+
-					player.name + "moves to PARTY, pays the costs, decreases knowledge, and skips one turn");
-					movePlayer(player, 4);
-					player.skipOneTurn = true;
-					player.knowledge = player.knowledge + board[player.position][4];
-					player.money = player.money - board[player.position][1];
-					if(player.money < 0) {
-						// exit 1. Lose the game if you are all out of study-time
-						System.out.println(player.name + " Could not afford to pay for the party and has lost");
-						player.setStillPlaying(false);
-					}
-					break;
-		}
-	}
+	// 	if(player.position == 2 || player.position == 9) {
+	// 		drawChanceCard(player);
+	// 	}
+	//
+	// 	System.out.println(player.name + " has " + player.money + " study-time and " + player.knowledge + " knowledge");
+	// }
+	//
+	//
+	//
+	// public void drawChanceCard(Player player) {
+	// 	int card = random.nextInt(5);
+	// 	//board[][get, pay, buy, rent, knowledge]
+	// 	switch(card) {
+	// 		case 0:	System.out.println(player.name + "has decided to cram for the exam in the LIBRARY this turn and the next");
+	// 				player.knowledge=player.knowledge + (4*board[7][4]);
+	// 				movePlayer(player, 7);
+	// 				player.skipOneTurn = true;
+	// 				break;
+	// 		case 1:	System.out.println(player.name + "has fallen ill. Go to START without collecting any study-time");
+	// 				movePlayer(player, 0);
+	// 				break;
+	// 		case 2: System.out.println(player.name + "has been given a VERBAL EXAM and moves to EXAM without losing a turn");
+	// 				movePlayer(player, 11);
+	// 				if(player.knowledge >= 200) {
+	// 					System.out.println(player.name + " PASSED THE EXAM AND WINS THE GAME! CONGRATULATIONS!");
+	// 					System.exit(0);
+	// 				}
+	// 				break;
+	// 		case 3: System.out.println(player.name + "\"PWNZ\" at the workshops.\n" +
+	// 				player.name + "gains ownership of A209 and A210, moves to A209 and collects the knowledge");
+	// 				Player owner;
+	// 				if((owner = checkOwned(12)) != null) {
+	// 					owner.ownsTile.remove(new Integer(12));
+	// 				}
+	// 				if((owner = checkOwned(13)) != null) {
+	// 					owner.ownsTile.remove(new Integer(13));
+	// 				}
+	// 				player.ownsTile.add(new Integer(12));
+	// 				player.ownsTile.add(new Integer(13));
+	// 				movePlayer(player, 12);
+	// 				player.knowledge = player.knowledge + board[player.position][4];
+	// 				break;
+	// 		case 4: System.out.println(player.name + "has passed out after a serious party.\n"+
+	// 				player.name + "moves to PARTY, pays the costs, decreases knowledge, and skips one turn");
+	// 				movePlayer(player, 4);
+	// 				player.skipOneTurn = true;
+	// 				player.knowledge = player.knowledge + board[player.position][4];
+	// 				player.money = player.money - board[player.position][1];
+	// 				if(player.money < 0) {
+	// 					// exit 1. Lose the game if you are all out of study-time
+	// 					System.out.println(player.name + " Could not afford to pay for the party and has lost");
+	// 					player.setStillPlaying(false);
+	// 				}
+	// 				break;
+	// 	}
+	// }
 
 	public void printInstructions() {
 		System.out.println("Currency: Study-time (Time is money, start with 200)");
@@ -274,13 +234,36 @@ public class LTUMonopoly {
 		System.out.println("Win by collecting 200 knowlede and go to the EXAM tile. Lose by running out of study-time");
 	}
 
+	private void buyTile (Player player, Tile tile) {
+		boolean canAfford = (player.money > tile.price) ? true : false;
+
+		if (tile.owner != null) {
+			System.out.println(tile.tileName + " is already owned by " + tile.owner.name);
+			return;
+		}
+		if (!tile.forSale) {
+			System.out.println(tile.tileName + " is not for sale");
+			return;
+		}
+
+		if (canAfford) {
+			player.money -= tile.price;
+			tile.owner = player;
+			tile.forSale = false;
+			System.out.println(player.name + " bought " + tile.tileName);
+		} else {
+				System.out.println(player.name + " could not afford " + tile.tileName);
+		}
+	}
+
 	private void checkTileForPenalty(Player player) {
 		// 3. If the tile you land on is owned, pay the rent
-		Player owner = checkOwned(player.position);
+		 Tile tile = this.tiles.get(player.position);
+		 Player owner = tile.owner;
 		//board[][get, pay, buy, rent, knowledge]
 		if(owner != null) {
-			player.money = player.money - board[player.position][3];
-			owner.money = owner.money + board[player.position][3];
+			player.money -= tile.rent;
+			owner.money += tile.rent;
 			if(player.money < 0) {
 				// exit 1. Lose the game if you are all out of study-time
 				System.out.println(player.name + " Could not afford to pay the rent and has lost");
@@ -302,7 +285,7 @@ public class LTUMonopoly {
 		return roll + player.position;
 	}
 
-	private void movePlayer(Player player, int position) {
+	private Tile movePlayer(Player player, int position) {
 		// 2. Roll d6 dice and move that number of steps.
 
 		Tile currentTile = this.tiles.get(player.position);
@@ -321,17 +304,15 @@ public class LTUMonopoly {
 		destinationTile.playerArr.add(player);
 
 		// 4. Increase or decrease your knowledge accordingly.
-		player.knowledge = player.knowledge + board[player.position][4];
+		player.knowledge += destinationTile.knowledge;
 
 		// 5. Pay any costs involved in arriving to the tile (e.g. PARTY)
-		player.money = player.money - board[player.position][1];
+		player.money -= destinationTile.penalty;
 		if(player.money < 0) {
 			// exit 1. Lose the game if you are all out of study-time
 			System.out.println(player.name + " Could not afford to pay for the party and has lost");
 			player.setStillPlaying(false);
 		}
+		return destinationTile;
 	}
-
-
-	//Draw a text-representation of the game-board.
 }
