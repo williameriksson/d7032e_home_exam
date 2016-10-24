@@ -6,14 +6,15 @@ import java.io.InputStreamReader;
 import java.util.Optional;
 import java.util.Random;
 
-
+import ltu.monopoly.players.Player;
+import ltu.monopoly.gameboard.*;
 
 
 public class LTUMonopoly {
 	BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 	public Player[] players;
 	public GameBoard gameBoard;
-	public LTUTiles tilesObject = new LTUTiles();
+	public Tiles tilesObject = new Tiles();
 	public ArrayList<Tile> tiles = tilesObject.tiles;
 	public Random random = new Random();
 
@@ -305,10 +306,12 @@ public class LTUMonopoly {
 		Tile destinationTile = this.tiles.get(player.position);
 		destinationTile.playerArr.add(player);
 
-		// 4. Increase or decrease your knowledge accordingly.
+		player.money += destinationTile.reward;
+
+		// Increase or decrease your knowledge accordingly.
 		player.knowledge += destinationTile.knowledge;
 
-		// 5. Pay any costs involved in arriving to the tile (e.g. PARTY)
+		// Pay any costs involved in arriving to the tile (e.g. PARTY)
 		player.money -= destinationTile.penalty;
 		if(player.money < 0) {
 			// exit 1. Lose the game if you are all out of study-time

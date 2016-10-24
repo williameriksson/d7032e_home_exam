@@ -1,13 +1,16 @@
-package monopoly;
+package ltu.monopoly.cards;
+
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import ltu.monopoly.gameboard.Tile;
+import ltu.monopoly.players.Player;
 
+public abstract class AbstractChanceCard {
 
-public abstract class ChanceCard {
   ArrayList<Tile> tiles;
 
-  public ChanceCard(ArrayList<Tile> tiles) {
+  public AbstractChanceCard(ArrayList<Tile> tiles) {
     this.tiles = tiles;
   }
 
@@ -21,5 +24,4 @@ public abstract class ChanceCard {
     }
     throw new NoSuchElementException();
   }
-
 }

@@ -3,27 +3,26 @@ import java.util.ArrayList;
 
 
 
-public class Player {
+public abstract class AbstractPlayer {
   public String name;
   public int position = 0;
   public int money = 200;
-  public int knowledge = 0;
   public boolean computer = false;
   public boolean stillPlaying = true;
   public boolean skipOneTurn = false;
 
-  public Player(String name) {
+  public AbstractPlayer(String name) {
     //Add spaces to make the gameboard printout pretty
-    this.name = "   " + name + "   ";
+    this.name = name;
   }
-  public Player(String name, boolean computer) {
+  public AbstractPlayer(String name, boolean computer) {
     //Add spaces to make the gameboard printout pretty
-    this.name = "   " + name + "   ";
+    this.name = name;
     this.computer = computer;
   }
 
   public void setStillPlaying(boolean playing) {
     stillPlaying = playing;
   }
-  
+
 }

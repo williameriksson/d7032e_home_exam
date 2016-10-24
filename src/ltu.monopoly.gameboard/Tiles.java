@@ -1,15 +1,12 @@
-package monopoly;
+package ltu.monopoly.gameboard;
 import java.util.ArrayList;
 import java.util.Optional;
+import ltu.monopoly.cards.*;
 
+public class Tiles {
+  public ArrayList<Tile> tiles;
 
-class LTUTiles {
-  ArrayList<Tile> tiles;
-
-
-  LTUTiles() {
-
-
+  public Tiles() {
 
     Tile start = new Tile("START");
     start.reward = 40;
@@ -93,77 +90,19 @@ class LTUTiles {
       add(a210);
     }};
 
-    ArrayList<ChanceCard> chanceCardList = new ArrayList<ChanceCard>();
+    ArrayList<AbstractChanceCard> chanceCardList = new ArrayList<AbstractChanceCard>();
 
     LibraryCard libraryCard = new LibraryCard(this.tiles);
-    chanceCardList.add(libraryCard);
+    FallenIllCard fallenIllCard = new FallenIllCard(this.tiles);
 
-    LTUChanceCards ltuChanceCards = new LTUChanceCards(chanceCardList);
+    chanceCardList.add(libraryCard);
+    chanceCardList.add(fallenIllCard);
+
+    ChanceCards ltuChanceCards = new ChanceCards(chanceCardList);
     ChanceFeature chanceFeature = new ChanceFeature(ltuChanceCards);
 
     chance1.tileFeature = chanceFeature;
     chance2.tileFeature = chanceFeature;
-
-
   }
 
-}
-
-
-class ExamFeature implements TileFeature {
-
-  @Override
-  public Optional<Integer> run (Player player) {
-    if (player.knowledge >= 200) {
-      System.out.println(player.name + " PASSED THE EXAM AND WINS THE GAME! CONGRATULATIONS!");
-      System.exit(0);
-    } else {
-      System.out.println(player.name + " had not studied enough for the exam and have to take a re-exam. Skip one turn");
-      player.skipOneTurn = true;
-    }
-    return Optional.empty();
-  }
-}
-
-class ChanceFeature implements TileFeature {
-  ChanceCards cards;
-  public ChanceFeature (ChanceCards cards) {
-    this.cards = cards;
-  }
-
-  @Override
-  public Optional<Integer> run (Player player) {
-    Optional<Integer> newPosition = this.cards.drawCard(player);
-    return newPosition;
-  }
-}
-
-
-
-class LTUChanceCards extends ChanceCards {
-
-   protected LTUChanceCards (ArrayList<ChanceCard> cards) {
-     super(cards);
-   }
-}
-
-
-class LibraryCard extends ChanceCard {
-
-  public LibraryCard (ArrayList<Tile> tiles) {
-    super(tiles);
-  }
-
-  @Override
-  public Optional<Integer> cardFunctionality (Player player) {
-    System.out.println(player.name + "has decided to cram for the exam in the LIBRARY this turn and the next");
-
-    int libraryPosition = getTileIndexByName("LIBRARY");
-    Tile libraryTile = this.tiles.get(libraryPosition);
-
-		player.knowledge += 4 * libraryTile.knowledge;
-		player.skipOneTurn = true;
-		return Optional.of(new Integer(libraryPosition));
-
-  }
 }

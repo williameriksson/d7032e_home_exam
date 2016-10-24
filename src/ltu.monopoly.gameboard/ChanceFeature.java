@@ -1,0 +1,18 @@
+package ltu.monopoly.gameboard;
+
+import java.util.Optional;
+import ltu.monopoly.players.Player;
+import ltu.monopoly.cards.ChanceCards;
+
+public class ChanceFeature implements InterfaceTileFeature {
+  ChanceCards cards;
+  public ChanceFeature (ChanceCards cards) {
+    this.cards = cards;
+  }
+
+  @Override
+  public Optional<Integer> run (Player player) {
+    Optional<Integer> newPosition = this.cards.drawCard(player);
+    return newPosition;
+  }
+}

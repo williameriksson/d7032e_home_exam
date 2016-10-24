@@ -1,8 +1,9 @@
-package monopoly;
+package ltu.monopoly.gameboard;
 import java.util.ArrayList;
 import java.util.Collections;
+import ltu.monopoly.players.Player;
 
-class GameBoard {
+public class GameBoard {
   Player[] players;
   ArrayList<Tile> tiles;
   int nrOfTiles;
@@ -12,7 +13,7 @@ class GameBoard {
   int tileWidth = 9;
   String border;
 
-  GameBoard (Player[] players, ArrayList<Tile> tiles) {
+  public GameBoard (Player[] players, ArrayList<Tile> tiles) {
     this.players = players;
     this.tiles = tiles;
     this.nrOfTiles = tiles.size();
