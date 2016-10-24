@@ -9,7 +9,7 @@ public class Tiles {
   public Tiles() {
 
     Tile start = new Tile("START");
-    start.reward = 40;
+    start.reward = 4;
 
     Tile stil = new Tile("StiL");
     stil.forSale = true;
@@ -94,9 +94,15 @@ public class Tiles {
 
     LibraryCard libraryCard = new LibraryCard(this.tiles);
     FallenIllCard fallenIllCard = new FallenIllCard(this.tiles);
+    VerbalExamCard verbalExamCard = new VerbalExamCard(this.tiles);
+    WorkShopCard workShopCard = new WorkShopCard(this.tiles);
+    PartyCard partyCard = new PartyCard(this.tiles);
 
     chanceCardList.add(libraryCard);
     chanceCardList.add(fallenIllCard);
+    chanceCardList.add(verbalExamCard);
+    chanceCardList.add(workShopCard);
+    chanceCardList.add(partyCard);
 
     ChanceCards ltuChanceCards = new ChanceCards(chanceCardList);
     ChanceFeature chanceFeature = new ChanceFeature(ltuChanceCards);

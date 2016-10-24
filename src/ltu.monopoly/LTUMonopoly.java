@@ -149,84 +149,19 @@ public class LTUMonopoly {
 
 		// 2. Roll dice and move player;
 		int newPosition = rollDice(player);
-		currentTile = movePlayer(player, newPosition);
+		movePlayer(player, newPosition);
 
 		// if(!player.computer) {
 		// 	System.out.println(player.name + "rolls a " + roll + " and lands on " + tileNames[player.position]);
 		// }
 
-		// 3. Check if the tile brings and penalty to the player;
-		checkTileForPenalty(player);
-
-
-		// exit 2. Win the game if you have >= 200 knowledge and stand at EXAM
-		if (currentTile.tileFeature != null) {
-			Optional<Integer> newPositionFromCard = currentTile.tileFeature.run(player);
-			newPositionFromCard.ifPresent(nPos -> movePlayer(player, nPos));
-		}
 	}
-		// 6. Draw a Chance card on the CHANCE tile and follow the text
-	// 	if(player.position == 2 || player.position == 9) {
-	// 		drawChanceCard(player);
-	// 	}
-	//
-	// 	System.out.println(player.name + " has " + player.money + " study-time and " + player.knowledge + " knowledge");
-	// }
-	//
-	//
-	//
-	// public void drawChanceCard(Player player) {
-	// 	int card = random.nextInt(5);
-	// 	//board[][get, pay, buy, rent, knowledge]
-	// 	switch(card) {
-	// 		case 0:	System.out.println(player.name + "has decided to cram for the exam in the LIBRARY this turn and the next");
-	// 				player.knowledge=player.knowledge + (4*board[7][4]);
-	// 				movePlayer(player, 7);
-	// 				player.skipOneTurn = true;
-	// 				break;
-	// 		case 1:	System.out.println(player.name + "has fallen ill. Go to START without collecting any study-time");
-	// 				movePlayer(player, 0);
-	// 				break;
-	// 		case 2: System.out.println(player.name + "has been given a VERBAL EXAM and moves to EXAM without losing a turn");
-	// 				movePlayer(player, 11);
-	// 				if(player.knowledge >= 200) {
-	// 					System.out.println(player.name + " PASSED THE EXAM AND WINS THE GAME! CONGRATULATIONS!");
-	// 					System.exit(0);
-	// 				}
-	// 				break;
-	// 		case 3: System.out.println(player.name + "\"PWNZ\" at the workshops.\n" +
-	// 				player.name + "gains ownership of A209 and A210, moves to A209 and collects the knowledge");
-	// 				Player owner;
-	// 				if((owner = checkOwned(12)) != null) {
-	// 					owner.ownsTile.remove(new Integer(12));
-	// 				}
-	// 				if((owner = checkOwned(13)) != null) {
-	// 					owner.ownsTile.remove(new Integer(13));
-	// 				}
-	// 				player.ownsTile.add(new Integer(12));
-	// 				player.ownsTile.add(new Integer(13));
-	// 				movePlayer(player, 12);
-	// 				player.knowledge = player.knowledge + board[player.position][4];
-	// 				break;
-	// 		case 4: System.out.println(player.name + "has passed out after a serious party.\n"+
-	// 				player.name + "moves to PARTY, pays the costs, decreases knowledge, and skips one turn");
-	// 				movePlayer(player, 4);
-	// 				player.skipOneTurn = true;
-	// 				player.knowledge = player.knowledge + board[player.position][4];
-	// 				player.money = player.money - board[player.position][1];
-	// 				if(player.money < 0) {
-	// 					// exit 1. Lose the game if you are all out of study-time
-	// 					System.out.println(player.name + " Could not afford to pay for the party and has lost");
-	// 					player.setStillPlaying(false);
-	// 				}
-	// 				break;
-	// 	}
-	// }
+
 
 	public void printInstructions() {
 		System.out.println("Currency: Study-time (Time is money, start with 200)");
 		System.out.println("Tiles:");
-		System.out.println("\tSTART: Collect 40");
+		System.out.println("\tSTART: Collect 4");
 		System.out.println("\tStiL/Philm: Go to the gym/cinema [buy: 6, rent 2]");
 		System.out.println("\tCHANCE: Draw a CHANCE card");
 		System.out.println("\tPARTY: Have a huge party [pay: 18, Decrease knowledge by 8]");
@@ -281,6 +216,7 @@ public class LTUMonopoly {
 	private int rollDice(Player player) {
 		int roll = random.nextInt(6) + 1;
 		int lastPosition = this.tiles.size() - 1;
+		System.out.println(player.name + " rolls a " + Integer.toString(roll));
 
 		if (roll + player.position > lastPosition) {
 			return roll - (lastPosition - player.position) - 1;
@@ -288,8 +224,16 @@ public class LTUMonopoly {
 		return roll + player.position;
 	}
 
-	public Tile movePlayer(Player player, int position) {
+	public void movePlayer(Player player, int position) {
 		// 2. Roll d6 dice and move that number of steps.
+
+		if (position < player.position) {
+			Tile startTile = this.tiles.get(0);
+			player.money += startTile.reward;
+		}
+
+		// 3. Check if the tile brings any penalty to the player;
+		checkTileForPenalty(player);
 
 		Tile currentTile = this.tiles.get(player.position);
 		ArrayList<Player> currentPlayerArr = currentTile.playerArr;
@@ -305,19 +249,22 @@ public class LTUMonopoly {
 		player.position = position;
 		Tile destinationTile = this.tiles.get(player.position);
 		destinationTile.playerArr.add(player);
-
+		System.out.println(player.name + " moves to " + destinationTile.tileName);
 		player.money += destinationTile.reward;
-
 		// Increase or decrease your knowledge accordingly.
 		player.knowledge += destinationTile.knowledge;
-
 		// Pay any costs involved in arriving to the tile (e.g. PARTY)
 		player.money -= destinationTile.penalty;
+
+		if (destinationTile.tileFeature != null) {
+			Optional<Integer> newPositionFromCard = destinationTile.tileFeature.run(player);
+			newPositionFromCard.ifPresent(nPos -> movePlayer(player, nPos));
+		}
+
 		if(player.money < 0) {
 			// exit 1. Lose the game if you are all out of study-time
 			System.out.println(player.name + " Could not afford to pay for the party and has lost");
 			player.setStillPlaying(false);
 		}
-		return destinationTile;
 	}
 }
