@@ -9,11 +9,9 @@ public class Tile extends AbstractTile {
   public InterfaceTileFeature tileFeature = null;
   public ArrayList<Player> playerArr= new ArrayList<Player>();
 
-
   public Tile (String tileName) {
     super(tileName);
   }
-
 
   public Tile (String tileName, InterfaceTileFeature feature) {
     super(tileName);

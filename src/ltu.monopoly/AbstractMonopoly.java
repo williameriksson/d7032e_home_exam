@@ -42,7 +42,7 @@ abstract class AbstractMonopoly {
 			startTile.playerArr.add(player);
 		}
 
-		gameBoard = new GameBoard(players, tiles);
+		gameBoard = new GameBoard(tiles);
 
 		//New game is started: show the gameBoard.
 		// gameBoard.paintGameBoard();
@@ -61,7 +61,7 @@ abstract class AbstractMonopoly {
 
   }
 
-  private void printInstructions() {
+  protected void printInstructions() {
     System.out.println("No game instructions specified, override this default text.");
   }
 

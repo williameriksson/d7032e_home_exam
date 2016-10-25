@@ -4,17 +4,27 @@ import java.util.Collections;
 import ltu.monopoly.players.Player;
 
 public class GameBoard {
-  Player[] players;
-  ArrayList<Tile> tiles;
-  int nrOfTiles;
-  int nrHorizTiles = 5;
-  int nrMiddleRows = 2;
-  int tileHeight = 5;
-  int tileWidth = 9;
-  String border;
+  private ArrayList<Tile> tiles;
+  private int nrOfTiles;
+  private int nrHorizTiles = 5;
+  private int nrMiddleRows = 2;
+  private int tileHeight = 5;
+  private int tileWidth = 9;
+  private String border;
 
-  public GameBoard (Player[] players, ArrayList<Tile> tiles) {
-    this.players = players;
+  public GameBoard (ArrayList<Tile> tiles) {
+
+    if ((tiles.size() % 2) != 0) {
+      System.out.println("The number of tiles must be even.");
+      System.exit(0);
+    }
+
+    if (tiles.size() < 4) {
+      System.out.println("Please add atleast 4 tiles.");
+      System.exit(0);
+    }
+
+    // TODO: make nrHorizTiles and nrMiddleRows automatic.
     this.tiles = tiles;
     nrOfTiles = tiles.size();
     border = new String(new char[tileWidth * nrHorizTiles + nrHorizTiles + 1]).replace("\0", "*") + "\n";
@@ -125,7 +135,7 @@ public class GameBoard {
     }
 
 
-    for (int j = 0; j < 4; j++) {
+    for (int j = 0; j < tileHeight - 1; j++) {
       for (int i = 0; i < tileArr.size(); i++) {
         Tile tile = tileArr.get(i);
 
@@ -180,7 +190,7 @@ public class GameBoard {
 
     System.out.print("*" + lSpace + rightTileName + rSpace + "* \n");
 
-    for (int j = 0; j < 4; j++) {
+    for (int j = 0; j < tileHeight - 1; j++) {
 
       if (leftTile.playerArr.size() > j) {
         Player player = leftTile.playerArr.get(j);
@@ -195,9 +205,8 @@ public class GameBoard {
       } else {
         System.out.print(emptyTile + "*");
       }
+
       System.out.print(middleSpace);
-
-
 
       if (rightTile.playerArr.size() > j) {
         Player player = rightTile.playerArr.get(j);

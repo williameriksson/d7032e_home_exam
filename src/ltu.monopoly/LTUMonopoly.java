@@ -37,7 +37,7 @@ public class LTUMonopoly extends AbstractMonopoly {
 			if(!player.computer) {
 				//Print the game-board for player characters.
 				gameBoard.paintGameBoard();
-				System.out.println(player.name + "Press [enter] to continue. (study-time: "+
+				System.out.println(player.name + " Press [enter] to continue. (study-time: "+
 					player.money+", knowledge: " + player.knowledge + ")");
 				try{
 					bufferedReader.readLine();
@@ -96,18 +96,14 @@ public class LTUMonopoly extends AbstractMonopoly {
 		}
 
 
-		// 2. Roll dice and move player;
+		// Roll dice and move the player to the new position;
 		int newPosition = rollDice(player);
 		movePlayer(player, newPosition);
 
-		// if(!player.computer) {
-		// 	System.out.println(player.name + "rolls a " + roll + " and lands on " + tileNames[player.position]);
-		// }
-
 	}
 
-
-	private void printInstructions() {
+	@Override
+	protected void printInstructions() {
 		System.out.println("Currency: Study-time (Time is money, start with 200)");
 		System.out.println("Tiles:");
 		System.out.println("\tSTART: Collect 4");
@@ -174,14 +170,15 @@ public class LTUMonopoly extends AbstractMonopoly {
 	}
 
 	public void movePlayer(Player player, int position) {
-		// 2. Roll d6 dice and move that number of steps.
 
+		// Check if the player moves past the START tile,
+		// give the player the reward in that case.
 		if (position < player.position) {
 			Tile startTile = tiles.get(0);
 			player.money += startTile.reward;
 		}
 
-		// 3. Check if the tile brings any penalty to the player;
+		// Check if the tile brings any penalty to the player;
 		checkTileForPenalty(player);
 
 		Tile currentTile = tiles.get(player.position);
@@ -195,10 +192,13 @@ public class LTUMonopoly extends AbstractMonopoly {
 				}
 		}
 
+		// Add the player to the new Tile;
 		player.position = position;
 		Tile destinationTile = tiles.get(player.position);
 		destinationTile.playerArr.add(player);
 		System.out.println(player.name + " moves to " + destinationTile.tileName);
+
+
 		player.money += destinationTile.reward;
 		// Increase or decrease your knowledge accordingly.
 		player.knowledge += destinationTile.knowledge;
@@ -211,7 +211,7 @@ public class LTUMonopoly extends AbstractMonopoly {
 		}
 
 		if(player.money < 0) {
-			// exit 1. Lose the game if you are all out of study-time
+			// Lose the game if you are all out of study-time
 			System.out.println(player.name + " Could not afford to pay for the party and has lost");
 			player.setStillPlaying(false);
 		}
