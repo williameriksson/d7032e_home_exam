@@ -1,4 +1,4 @@
-package monopoly;
+package ltu.monopoly.gameboard;
 import java.util.ArrayList;
 
 

@@ -1,4 +1,4 @@
-package monopoly;
+package ltu.monopoly.cards;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Optional;

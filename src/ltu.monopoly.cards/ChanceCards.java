@@ -1,7 +1,6 @@
 package ltu.monopoly.cards;
 import java.util.ArrayList;
 import java.util.Optional;
-import monopoly.AbstractChanceCards;
 import ltu.monopoly.players.Player;
 
 public class ChanceCards extends AbstractChanceCards {

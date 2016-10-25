@@ -1,4 +1,4 @@
-package monopoly;
+package ltu.monopoly.players;
 import java.util.ArrayList;
 
 

@@ -1,8 +1,5 @@
 package ltu.monopoly.players;
 import java.util.ArrayList;
-import monopoly.AbstractPlayer;
-
-
 
 public class Player extends AbstractPlayer {
   public int knowledge = 0;

@@ -1,7 +1,6 @@
 package ltu.monopoly.gameboard;
 
 import java.util.ArrayList;
-import monopoly.AbstractTile;
 import ltu.monopoly.players.Player;
 
 public class Tile extends AbstractTile {
