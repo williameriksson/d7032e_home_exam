@@ -1,73 +1,20 @@
-package monopoly;
+package ltu.monopoly;
+
 import java.util.ArrayList;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Optional;
-import java.util.Random;
 
 import ltu.monopoly.players.Player;
-import ltu.monopoly.gameboard.*;
+import ltu.monopoly.gameboard.Tile;
+import ltu.monopoly.gameboard.GameBoard;
 
 
-public class LTUMonopoly {
-	BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-	public Player[] players;
-	public GameBoard gameBoard;
-	public Tiles tilesObject = new Tiles();
-	public ArrayList<Tile> tiles = tilesObject.tiles;
-	public Random random = new Random();
-
-	public static void main(String argv[]) {
-		if(argv.length < 1 ||argv.length > 4) {
-			System.out.println("Syntax: LTUMonopoly [Player 1-4 initials]\nexample: LTUMonopoly F.L J.H K.S");
-			System.exit(0);
-		} else {
-			new LTUMonopoly(argv);
-		}
-	}
+public class LTUMonopoly extends AbstractMonopoly {
 
 	public LTUMonopoly(String[] playerNames) {
-		//There are always 4 players
-		players = new Player[4];
-
-		//Fill up with computer players
-		int computerID = 1;
-		for(int i=0; i<4; i++) {
-			if(playerNames.length >= (i+1)) {
-				players[i] = new Player(playerNames[i]);
-			} else {
-				//C.1 = computer 1, etc.
-				players[i] = new Player("C." + computerID, true);
-				computerID++;
-			}
-		}
-		this.tilesObject.tiles.get(0).playerArr.add(players[0]);
-		this.tilesObject.tiles.get(0).playerArr.add(players[1]);
-		this.tilesObject.tiles.get(0).playerArr.add(players[2]);
-		this.tilesObject.tiles.get(0).playerArr.add(players[3]);
-		gameBoard = new GameBoard(this.players, this.tiles);
-
-
-
-		//New game is started: show the gameBoard.
-		gameBoard.paintGameBoard();
-		System.out.println("");
-		printInstructions();
-		System.out.println("\n");
-
-		int i=0;
-		while(true) {
-			makeMove(players[i]);
-			i++;
-			if(i>3) {
-				i=0;
-			}
-		}
+		super(playerNames);
 	}
 
-	//Roll dice, move, draw cards, pay rent, or offer to buy property
-	public void makeMove(Player player) {
+
 		/*
 			Rules:
 				* 1. In the beginning of your turn you may opt to buy unowned property
@@ -80,6 +27,8 @@ public class LTUMonopoly {
 				* exit 2. Win the game if you have >= 200 knowledge and stand at EXAM
 				* Property can not be sold once bought
 		*/
+	@Override
+	protected void makeMove(Player player) {
 
 		if(player.stillPlaying) {
 			System.out.println("It is now the turn of " + player.name);
@@ -158,7 +107,7 @@ public class LTUMonopoly {
 	}
 
 
-	public void printInstructions() {
+	private void printInstructions() {
 		System.out.println("Currency: Study-time (Time is money, start with 200)");
 		System.out.println("Tiles:");
 		System.out.println("\tSTART: Collect 4");
@@ -196,7 +145,7 @@ public class LTUMonopoly {
 
 	private void checkTileForPenalty(Player player) {
 		// 3. If the tile you land on is owned, pay the rent
-		 Tile tile = this.tiles.get(player.position);
+		 Tile tile = tiles.get(player.position);
 		 Player owner = tile.owner;
 		//board[][get, pay, buy, rent, knowledge]
 		if(owner != null) {
@@ -215,7 +164,7 @@ public class LTUMonopoly {
 
 	private int rollDice(Player player) {
 		int roll = random.nextInt(6) + 1;
-		int lastPosition = this.tiles.size() - 1;
+		int lastPosition = tiles.size() - 1;
 		System.out.println(player.name + " rolls a " + Integer.toString(roll));
 
 		if (roll + player.position > lastPosition) {
@@ -228,14 +177,14 @@ public class LTUMonopoly {
 		// 2. Roll d6 dice and move that number of steps.
 
 		if (position < player.position) {
-			Tile startTile = this.tiles.get(0);
+			Tile startTile = tiles.get(0);
 			player.money += startTile.reward;
 		}
 
 		// 3. Check if the tile brings any penalty to the player;
 		checkTileForPenalty(player);
 
-		Tile currentTile = this.tiles.get(player.position);
+		Tile currentTile = tiles.get(player.position);
 		ArrayList<Player> currentPlayerArr = currentTile.playerArr;
 
 		// Remove the player from the current tile
@@ -247,7 +196,7 @@ public class LTUMonopoly {
 		}
 
 		player.position = position;
-		Tile destinationTile = this.tiles.get(player.position);
+		Tile destinationTile = tiles.get(player.position);
 		destinationTile.playerArr.add(player);
 		System.out.println(player.name + " moves to " + destinationTile.tileName);
 		player.money += destinationTile.reward;

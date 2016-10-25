@@ -15,7 +15,7 @@ public class VerbalExamCard extends AbstractChanceCard {
     System.out.println(player.name + "has been given a VERBAL EXAM and moves to EXAM without losing a turn");
 
     int examPosition = getTileIndexByName("EXAM");
-    Tile examTile = this.tiles.get(examPosition);
+    Tile examTile = tiles.get(examPosition);
     player.skipOneTurn = false;
 
 		return Optional.of(new Integer(examPosition));

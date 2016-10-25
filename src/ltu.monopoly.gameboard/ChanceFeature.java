@@ -12,7 +12,7 @@ public class ChanceFeature implements InterfaceTileFeature {
 
   @Override
   public Optional<Integer> run (Player player) {
-    Optional<Integer> newPosition = this.cards.drawCard(player);
+    Optional<Integer> newPosition = cards.drawCard(player);
     return newPosition;
   }
 }

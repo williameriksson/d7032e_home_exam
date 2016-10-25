@@ -73,7 +73,7 @@ public class Tiles {
     a210.rent = 5;
     a210.knowledge = 4;
 
-    this.tiles = new ArrayList<Tile>() {{
+    tiles = new ArrayList<Tile>() {{
       add(start);
       add(stil);
       add(chance1);
@@ -92,11 +92,11 @@ public class Tiles {
 
     ArrayList<AbstractChanceCard> chanceCardList = new ArrayList<AbstractChanceCard>();
 
-    LibraryCard libraryCard = new LibraryCard(this.tiles);
-    FallenIllCard fallenIllCard = new FallenIllCard(this.tiles);
-    VerbalExamCard verbalExamCard = new VerbalExamCard(this.tiles);
-    WorkShopCard workShopCard = new WorkShopCard(this.tiles);
-    PartyCard partyCard = new PartyCard(this.tiles);
+    LibraryCard libraryCard = new LibraryCard(tiles);
+    FallenIllCard fallenIllCard = new FallenIllCard(tiles);
+    VerbalExamCard verbalExamCard = new VerbalExamCard(tiles);
+    WorkShopCard workShopCard = new WorkShopCard(tiles);
+    PartyCard partyCard = new PartyCard(tiles);
 
     chanceCardList.add(libraryCard);
     chanceCardList.add(fallenIllCard);

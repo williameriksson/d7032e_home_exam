@@ -15,7 +15,7 @@ public class FallenIllCard extends AbstractChanceCard {
     System.out.println(player.name + "has fallen ill. Go to START without collecting any study-time");
 
     int startPosition = getTileIndexByName("START");
-    Tile startTile = this.tiles.get(startPosition);
+    Tile startTile = tiles.get(startPosition);
     player.money -= startTile.reward;
 		return Optional.of(new Integer(startPosition));
 

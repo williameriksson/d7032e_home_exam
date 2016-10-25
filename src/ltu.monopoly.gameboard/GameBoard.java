@@ -16,8 +16,8 @@ public class GameBoard {
   public GameBoard (Player[] players, ArrayList<Tile> tiles) {
     this.players = players;
     this.tiles = tiles;
-    this.nrOfTiles = tiles.size();
-    this.border = new String(new char[this.tileWidth * this.nrHorizTiles + this.nrHorizTiles + 1]).replace("\0", "*") + "\n";
+    nrOfTiles = tiles.size();
+    border = new String(new char[tileWidth * nrHorizTiles + nrHorizTiles + 1]).replace("\0", "*") + "\n";
 
   }
 
@@ -63,26 +63,26 @@ public class GameBoard {
   */
 
     // Print the top border
-    System.out.print(this.border);
+    System.out.print(border);
 
     // Print the top tiles
-    ArrayList<Tile> tempTopTiles = new ArrayList<Tile>(tiles.subList(0, this.nrHorizTiles));
+    ArrayList<Tile> tempTopTiles = new ArrayList<Tile>(tiles.subList(0, nrHorizTiles));
     printFullTileRow(tempTopTiles);
 
     // Print border for the bottom of the top tiles
-    System.out.print(this.border);
+    System.out.print(border);
 
     // Print the middle tiles. The boolean "lastMidTiles" is there to tell
     // the function "printMiddleTileRow" if it should print a full border
     // or just a border for the single tile.
     boolean lastMidTiles = false;
-    for (int i = 0; i < this.nrMiddleRows; i++) {
+    for (int i = 0; i < nrMiddleRows; i++) {
       ArrayList<Tile> tempMidTiles = new ArrayList<Tile>();
 
       tempMidTiles.add(tiles.get(tiles.size() - 1 - i));
-      tempMidTiles.add(tiles.get(this.nrHorizTiles + i));
+      tempMidTiles.add(tiles.get(nrHorizTiles + i));
 
-      if (i == this.nrMiddleRows - 1 ) {
+      if (i == nrMiddleRows - 1 ) {
         lastMidTiles = true;
       }
       printMiddleTileRow(tempMidTiles, lastMidTiles);
@@ -90,29 +90,29 @@ public class GameBoard {
 
     // Print the bottom tiles
     ArrayList<Tile> tempBotTiles = new ArrayList<Tile>(tiles.subList(
-                                                        this.nrHorizTiles + this.nrMiddleRows,
-                                                        this.nrOfTiles - this.nrMiddleRows));
+                                                        nrHorizTiles + nrMiddleRows,
+                                                        nrOfTiles - nrMiddleRows));
 
     // We need to reverse the list to get the correct printing order
     Collections.reverse(tempBotTiles);
     printFullTileRow(tempBotTiles);
 
     // Print the bottom border
-    System.out.print(this.border);
+    System.out.print(border);
 
 
 
   }
 
   private void printFullTileRow (ArrayList<Tile> tileArr) {
-    String emptyTile = "*" + new String(new char[this.tileWidth]).replace("\0", " ");
+    String emptyTile = "*" + new String(new char[tileWidth]).replace("\0", " ");
 
     for (int i = 0; i < tileArr.size(); i++) {
       Tile tile = tileArr.get(i);
 
       String tileName = tile.tileName;
       int tileNameLen = tileName.length();
-      int emptySpace = this.tileWidth - tileNameLen;
+      int emptySpace = tileWidth - tileNameLen;
 
       String lSpace = new String(new char[ emptySpace / 2 ]).replace("\0", " ");
       String rSpace = new String(new char[ emptySpace / 2 + emptySpace % 2 ]).replace("\0", " ");
@@ -133,7 +133,7 @@ public class GameBoard {
           Player player = tile.playerArr.get(j);
           String playerName = player.name;
           int playerNameLen = playerName.length();
-          int emptySpace = this.tileWidth - playerNameLen;
+          int emptySpace = tileWidth - playerNameLen;
 
           String lSpace = new String(new char[ emptySpace / 2 ]).replace("\0", " ");
           String rSpace = new String(new char[ emptySpace / 2 + emptySpace % 2 ]).replace("\0", " ");
@@ -143,7 +143,7 @@ public class GameBoard {
           System.out.print(emptyTile);
         }
 
-        if (i == this.nrHorizTiles - 1) {
+        if (i == nrHorizTiles - 1) {
           System.out.print("* \n");
         }
       }
@@ -151,8 +151,8 @@ public class GameBoard {
   }
 
   private void printMiddleTileRow(ArrayList<Tile> tileArr, boolean lastMidTiles) {
-    String emptyTile = "*" + new String(new char[this.tileWidth]).replace("\0", " ");
-    String bottomOfTile = new String(new char[this.tileWidth + 2]).replace("\0", "*");
+    String emptyTile = "*" + new String(new char[tileWidth]).replace("\0", " ");
+    String bottomOfTile = new String(new char[tileWidth + 2]).replace("\0", "*");
 
     Tile leftTile = tileArr.get(0);
     Tile rightTile = tileArr.get(1);
@@ -163,15 +163,15 @@ public class GameBoard {
     int leftTileNameLen = leftTileName.length();
     int rightTileNameLen = rightTileName.length();
 
-    int leftEmptySpace = this.tileWidth - leftTileNameLen;
-    int rightEmptySpace = this.tileWidth - rightTileNameLen;
+    int leftEmptySpace = tileWidth - leftTileNameLen;
+    int rightEmptySpace = tileWidth - rightTileNameLen;
 
     String lSpace = new String(new char[ leftEmptySpace / 2 ]).replace("\0", " ");
     String rSpace = new String(new char[ leftEmptySpace / 2 + leftEmptySpace % 2 ]).replace("\0", " ");
 
     System.out.print("*" + lSpace + leftTileName + rSpace + "*");
 
-    String middleSpace = new String(new char[this.tileWidth * (this.nrHorizTiles - 2) + 2]).replace("\0", " ");
+    String middleSpace = new String(new char[tileWidth * (nrHorizTiles - 2) + 2]).replace("\0", " ");
 
     System.out.print(middleSpace);
 
@@ -186,7 +186,7 @@ public class GameBoard {
         Player player = leftTile.playerArr.get(j);
         String playerName = player.name;
         int playerNameLen = playerName.length();
-        int emptySpace = this.tileWidth - playerNameLen;
+        int emptySpace = tileWidth - playerNameLen;
 
         lSpace = new String(new char[ emptySpace / 2 ]).replace("\0", " ");
         rSpace = new String(new char[ emptySpace / 2 + emptySpace % 2 ]).replace("\0", " ");
@@ -203,7 +203,7 @@ public class GameBoard {
         Player player = rightTile.playerArr.get(j);
         String playerName = player.name;
         int playerNameLen = playerName.length();
-        int emptySpace = this.tileWidth - playerNameLen;
+        int emptySpace = tileWidth - playerNameLen;
 
         lSpace = new String(new char[ emptySpace / 2 ]).replace("\0", " ");
         rSpace = new String(new char[ emptySpace / 2 + emptySpace % 2 ]).replace("\0", " ");
@@ -215,7 +215,7 @@ public class GameBoard {
 
     }
       if (lastMidTiles) {
-        System.out.print(this.border);
+        System.out.print(border);
       } else {
         System.out.print(bottomOfTile);
         System.out.print(middleSpace);

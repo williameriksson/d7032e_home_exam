@@ -11,8 +11,8 @@ public class ChanceCards extends AbstractChanceCards {
   }
 
   public Optional<Integer> drawCard(Player player) {
-    int cardIndex = random.nextInt(this.chanceCards.size());
-    AbstractChanceCard drawnCard = this.chanceCards.get(cardIndex);
+    int cardIndex = random.nextInt(chanceCards.size());
+    AbstractChanceCard drawnCard = chanceCards.get(cardIndex);
     return drawnCard.cardFunctionality(player);
   }
 

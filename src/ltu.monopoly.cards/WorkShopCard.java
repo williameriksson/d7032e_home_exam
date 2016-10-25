@@ -17,8 +17,8 @@ public class WorkShopCard extends AbstractChanceCard {
 
     int a209Index = getTileIndexByName("A209");
     int a210Index = getTileIndexByName("A210");
-    Tile a209 = this.tiles.get(a209Index);
-    Tile a210 = this.tiles.get(a210Index);
+    Tile a209 = tiles.get(a209Index);
+    Tile a210 = tiles.get(a210Index);
 
     a209.forSale = false;
     a210.forSale = false;

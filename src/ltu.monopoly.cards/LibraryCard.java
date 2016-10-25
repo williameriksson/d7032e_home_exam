@@ -15,7 +15,7 @@ public class LibraryCard extends AbstractChanceCard {
     System.out.println(player.name + "has decided to cram for the exam in the LIBRARY this turn and the next");
 
     int libraryPosition = getTileIndexByName("LIBRARY");
-    Tile libraryTile = this.tiles.get(libraryPosition);
+    Tile libraryTile = tiles.get(libraryPosition);
 
 		player.knowledge += 4 * libraryTile.knowledge;
 		player.skipOneTurn = true;

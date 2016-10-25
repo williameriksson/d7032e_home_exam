@@ -17,9 +17,9 @@ public abstract class AbstractChanceCard {
   public abstract Optional<Integer> cardFunctionality (Player player);
 
   public int getTileIndexByName(String name) throws NoSuchElementException {
-    for (Tile tile : this.tiles) {
+    for (Tile tile : tiles) {
       if (tile.tileName.equals(name)) {
-        return this.tiles.indexOf(tile);
+        return tiles.indexOf(tile);
       }
     }
     throw new NoSuchElementException();
