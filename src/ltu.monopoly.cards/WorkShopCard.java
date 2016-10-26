@@ -20,9 +20,6 @@ public class WorkShopCard extends AbstractChanceCard {
     Tile a209 = tiles.get(a209Index);
     Tile a210 = tiles.get(a210Index);
 
-    a209.forSale = false;
-    a210.forSale = false;
-
     a209.owner = player;
     a210.owner = player;
 

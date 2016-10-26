@@ -2,15 +2,16 @@ package ltu.monopoly;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.ListIterator;
 
 import ltu.monopoly.players.Player;
 import ltu.monopoly.gameboard.Tile;
 import ltu.monopoly.gameboard.GameBoard;
 
 
-public class LTUMonopoly extends AbstractMonopoly {
+class LTUMonopoly extends AbstractMonopoly {
 
-	public LTUMonopoly(String[] playerNames) {
+	LTUMonopoly(String[] playerNames) {
 		super(playerNames);
 	}
 
@@ -132,7 +133,7 @@ public class LTUMonopoly extends AbstractMonopoly {
 		if (canAfford) {
 			player.money -= tile.price;
 			tile.owner = player;
-			tile.forSale = false;
+			// tile.forSale = false;
 			System.out.println(player.name + " bought " + tile.tileName);
 		} else {
 				System.out.println(player.name + " could not afford " + tile.tileName);
@@ -169,7 +170,7 @@ public class LTUMonopoly extends AbstractMonopoly {
 		return roll + player.position;
 	}
 
-	public void movePlayer(Player player, int position) {
+	private void movePlayer(Player player, int position) {
 
 		// Check if the player moves past the START tile,
 		// give the player the reward in that case.
@@ -185,12 +186,7 @@ public class LTUMonopoly extends AbstractMonopoly {
 		ArrayList<Player> currentPlayerArr = currentTile.playerArr;
 
 		// Remove the player from the current tile
-		for (int i = 0; i < currentPlayerArr.size(); i++) {
-				if (currentPlayerArr.get(i) == player) {
-					currentPlayerArr.remove(i);
-					break;
-				}
-		}
+		removePlayerFromTile(player);
 
 		// Add the player to the new Tile;
 		player.position = position;
@@ -210,10 +206,40 @@ public class LTUMonopoly extends AbstractMonopoly {
 			newPositionFromCard.ifPresent(nPos -> movePlayer(player, nPos));
 		}
 
-		if(player.money < 0) {
+		if(player.money <= 0) {
 			// Lose the game if you are all out of study-time
-			System.out.println(player.name + " Could not afford to pay for the party and has lost");
-			player.setStillPlaying(false);
+			System.out.println(player.name + " is all out of study-time and has lost");
+			removePlayerFromGame(player);
 		}
 	}
+
+	private void removePlayerFromTile (Player player) {
+		ArrayList<Tile> tiles = tilesObject.tiles;
+		ListIterator tilesIterator = tiles.listIterator();
+		while (tilesIterator.hasNext()) {
+			Tile tile = (Tile) tilesIterator.next();
+			ListIterator playerIterator = tile.playerArr.listIterator();
+			while (playerIterator.hasNext()) {
+				Player aPlayer = (Player) playerIterator.next();
+				System.out.println(aPlayer.name);
+				if (aPlayer == player) {
+					playerIterator.remove();
+				}
+			}
+		}
+	}
+
+	private void removePlayerFromGame (Player player) {
+		removePlayerFromTile(player);
+		player.setStillPlaying(false);
+		ListIterator tilesIterator = tiles.listIterator();
+		while (tilesIterator.hasNext()) {
+			Tile tile = (Tile) tilesIterator.next();
+			System.out.println(tile.tileName);
+			if (tile.owner == player) {
+				tile.owner = null;
+			}
+		}
+	}
+
 }
