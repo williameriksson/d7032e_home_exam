@@ -221,7 +221,6 @@ class LTUMonopoly extends AbstractMonopoly {
 			ListIterator playerIterator = tile.playerArr.listIterator();
 			while (playerIterator.hasNext()) {
 				Player aPlayer = (Player) playerIterator.next();
-				System.out.println(aPlayer.name);
 				if (aPlayer == player) {
 					playerIterator.remove();
 				}
@@ -235,7 +234,6 @@ class LTUMonopoly extends AbstractMonopoly {
 		ListIterator tilesIterator = tiles.listIterator();
 		while (tilesIterator.hasNext()) {
 			Tile tile = (Tile) tilesIterator.next();
-			System.out.println(tile.tileName);
 			if (tile.owner == player) {
 				tile.owner = null;
 			}

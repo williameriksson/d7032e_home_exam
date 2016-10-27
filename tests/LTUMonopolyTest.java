@@ -6,7 +6,7 @@ import org.junit.Test;
 
 
 public class LTUMonopolyTest {
-  String[] names = {"AAA", "BBB", "CCC", "DDD"};
+  String[] names = {"AAA"};
   LTUMonopoly ltuMonopoly;
 
   public LTUMonopolyTest() {
@@ -14,8 +14,10 @@ public class LTUMonopolyTest {
   }
 
   @Test
-  public void justATest () {
-
-    assertEquals(1,1);
+  public void verifyMakeMove () {
+    int oldPos = ltuMonopoly.players[1].position;
+    ltuMonopoly.makeMove(ltuMonopoly.players[1]);
+    int newPos = ltuMonopoly.players[1].position;
+    assertTrue(newPos != oldPos || newPos == 0);
   }
 }

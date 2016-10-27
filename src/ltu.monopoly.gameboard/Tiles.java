@@ -9,7 +9,7 @@ public class Tiles {
   public Tiles() {
 
     Tile start = new Tile("START");
-    start.reward = 4;
+    start.reward = 2;
 
     Tile stil = new Tile("StiL");
     stil.forSale = true;
