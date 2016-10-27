@@ -2,7 +2,7 @@ package ltu.monopoly.players;
 import java.util.ArrayList;
 
 
-
+// Abstract player class, contains basic properties of a player.
 public abstract class AbstractPlayer {
   public String name;
   public int position = 0;

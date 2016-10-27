@@ -12,8 +12,8 @@ public class PartyCard extends AbstractChanceCard {
 
   @Override
   public Optional<Integer> cardFunctionality (Player player) {
-    System.out.println(player.name + "has passed out after a serious party.\n"+
-                        player.name + "moves to PARTY, pays the costs, decreases knowledge, and skips one turn");
+    System.out.println(player.name + " has passed out after a serious party.\n"+
+                        player.name + " moves to PARTY, pays the costs, decreases knowledge, and skips one turn");
 
     int partyPosition = getTileIndexByName("PARTY");
     player.skipOneTurn = true;

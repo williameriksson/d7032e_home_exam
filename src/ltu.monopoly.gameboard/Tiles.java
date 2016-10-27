@@ -3,10 +3,14 @@ import java.util.ArrayList;
 import java.util.Optional;
 import ltu.monopoly.cards.*;
 
+// This is a factory class for making the tiles that should be on the gameboard.
+
 public class Tiles {
   public ArrayList<Tile> tiles;
 
   public Tiles() {
+    // New tiles can be created here, the default values can be overridden by
+    // assigning the properties of the tiles.
 
     Tile start = new Tile("START");
     start.reward = 2;
@@ -73,6 +77,7 @@ public class Tiles {
     a210.rent = 5;
     a210.knowledge = 4;
 
+    // Create a new ArrayList that contains all the tiles.
     tiles = new ArrayList<Tile>() {{
       add(start);
       add(stil);
@@ -90,23 +95,29 @@ public class Tiles {
       add(a210);
     }};
 
+    // Create the chance card list.
     ArrayList<AbstractChanceCard> chanceCardList = new ArrayList<AbstractChanceCard>();
 
+    // Create the chance cards.
     LibraryCard libraryCard = new LibraryCard(tiles);
     FallenIllCard fallenIllCard = new FallenIllCard(tiles);
     VerbalExamCard verbalExamCard = new VerbalExamCard(tiles);
     WorkShopCard workShopCard = new WorkShopCard(tiles);
     PartyCard partyCard = new PartyCard(tiles);
 
+    // Add the cards to the chance card list.
     chanceCardList.add(libraryCard);
     chanceCardList.add(fallenIllCard);
     chanceCardList.add(verbalExamCard);
     chanceCardList.add(workShopCard);
     chanceCardList.add(partyCard);
 
+    // Create the LTU chance cards object with the chance card list.
     ChanceCards ltuChanceCards = new ChanceCards(chanceCardList);
+    // Create a new feature for the chance tiles with the chance card list.
     ChanceFeature chanceFeature = new ChanceFeature(ltuChanceCards);
 
+    // Assign the feature to the chance tiles.
     chance1.tileFeature = chanceFeature;
     chance2.tileFeature = chanceFeature;
   }

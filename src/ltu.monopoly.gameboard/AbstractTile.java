@@ -1,7 +1,7 @@
 package ltu.monopoly.gameboard;
 import java.util.ArrayList;
 
-
+// Abstract class with base properties for a Tile.
 public abstract class AbstractTile {
   public String tileName;
   public int reward = 0;

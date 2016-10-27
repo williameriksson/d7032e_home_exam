@@ -12,7 +12,7 @@ public class LibraryCard extends AbstractChanceCard {
 
   @Override
   public Optional<Integer> cardFunctionality (Player player) {
-    System.out.println(player.name + "has decided to cram for the exam in the LIBRARY this turn and the next");
+    System.out.println(player.name + " has decided to cram for the exam in the LIBRARY this turn and the next");
 
     int libraryPosition = getTileIndexByName("LIBRARY");
     Tile libraryTile = tiles.get(libraryPosition);

@@ -44,12 +44,12 @@ abstract class AbstractMonopoly {
 
 		gameBoard = new GameBoard(tiles);
 
-		//New game is started: show the gameBoard.
-		// gameBoard.paintGameBoard();
+		//New game is started, print the instructions.
 		System.out.println("");
 		printInstructions();
 		System.out.println("\n");
 
+    // Iterate over the players to take turns.
 		int i=0;
 		while(true) {
 			makeMove(players[i]);
@@ -61,6 +61,7 @@ abstract class AbstractMonopoly {
 
   }
 
+  // Default instructions that should be overridden by the concrete class.
   protected void printInstructions() {
     System.out.println("No game instructions specified, override this default text.");
   }

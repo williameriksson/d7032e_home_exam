@@ -12,12 +12,13 @@ public class VerbalExamCard extends AbstractChanceCard {
 
   @Override
   public Optional<Integer> cardFunctionality (Player player) {
-    System.out.println(player.name + " has been given a VERBAL EXAM and moves to EXAM without losing a turn");
+    System.out.println(player.name + " has been given a VERBAL EXAM and moves to EXAM without losing a turn.");
 
     int examPosition = getTileIndexByName("EXAM");
     Tile examTile = tiles.get(examPosition);
     player.skipOneTurn = false;
 
+    // Return the position of the Exam tile.
 		return Optional.of(new Integer(examPosition));
 
   }

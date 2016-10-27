@@ -42,7 +42,9 @@ class LTUMonopoly extends AbstractMonopoly {
 					player.money+", knowledge: " + player.knowledge + ")");
 				try{
 					bufferedReader.readLine();
-				} catch(Exception e){};
+				} catch(Exception e) {
+					System.out.println(e);
+				};
 			}
 		} else { // this current player has already lost the game, check if there are any players left playing
 			boolean someoneIsStillPlaying = false;
@@ -68,10 +70,11 @@ class LTUMonopoly extends AbstractMonopoly {
 			return;
 		}
 
+		// Get the tile that the player stands on.
 		int pos = player.position;
 		Tile currentTile = tiles.get(pos);
-		// 1. In the beginning of your turn you may opt to buy unowned property
-		// First check if the current tile is unowned - offer player to buy
+		// In the beginning of your turn you may opt to buy unowned property
+		// First check if the current tile is unowned and buyable- offer player to buy
 		if (currentTile.forSale && currentTile.owner == null) {
 			boolean canAfford = (player.money > currentTile.price) ? true : false;
 
@@ -91,7 +94,7 @@ class LTUMonopoly extends AbstractMonopoly {
 				if (choice.equals("y")) {
 					buyTile(player, currentTile);
 				}
-			} else if (player.computer && canAfford) {
+			} else if (player.computer && canAfford) { // Computer always buy if possible.
 				buyTile(player, currentTile);
 			}
 		}
@@ -107,7 +110,7 @@ class LTUMonopoly extends AbstractMonopoly {
 	protected void printInstructions() {
 		System.out.println("Currency: Study-time (Time is money, start with 200)");
 		System.out.println("Tiles:");
-		System.out.println("\tSTART: Collect 4");
+		System.out.println("\tSTART: Collect 2");
 		System.out.println("\tStiL/Philm: Go to the gym/cinema [buy: 6, rent 2]");
 		System.out.println("\tCHANCE: Draw a CHANCE card");
 		System.out.println("\tPARTY: Have a huge party [pay: 18, Decrease knowledge by 8]");
@@ -119,21 +122,23 @@ class LTUMonopoly extends AbstractMonopoly {
 	}
 
 	private void buyTile (Player player, Tile tile) {
+		// Calculate if the player can affor to buy the tile.
 		boolean canAfford = (player.money > tile.price) ? true : false;
 
+		// Ensure that nobody owns the tile already.
 		if (tile.owner != null) {
 			System.out.println(tile.tileName + " is already owned by " + tile.owner.name);
 			return;
-		}
+		} // Ensure that the tile is buyable.
 		if (!tile.forSale) {
 			System.out.println(tile.tileName + " is not for sale");
 			return;
 		}
 
+		// If the player can afford the tile, buy it.
 		if (canAfford) {
 			player.money -= tile.price;
 			tile.owner = player;
-			// tile.forSale = false;
 			System.out.println(player.name + " bought " + tile.tileName);
 		} else {
 				System.out.println(player.name + " could not afford " + tile.tileName);
@@ -144,13 +149,14 @@ class LTUMonopoly extends AbstractMonopoly {
 		// 3. If the tile you land on is owned, pay the rent
 		 Tile tile = tiles.get(player.position);
 		 Player owner = tile.owner;
-		//board[][get, pay, buy, rent, knowledge]
-		if(owner != null) {
+
+		// If the tile is owned by someone else, pay the rent.
+		if(owner != null && owner != player) {
 			player.money -= tile.rent;
 			owner.money += tile.rent;
-			if(player.money < 0) {
-				// exit 1. Lose the game if you are all out of study-time
-				System.out.println(player.name + " Could not afford to pay the rent and has lost");
+			if(player.money <= 0) {
+				// Lose the game if you are all out of study-time
+				System.out.println(player.name + " could not afford to pay the rent.");
 				player.setStillPlaying(false);
 			} else {
 				System.out.println(player.name + " paid the rent to " + owner.name +
@@ -160,13 +166,17 @@ class LTUMonopoly extends AbstractMonopoly {
 	}
 
 	private int rollDice(Player player) {
+		// Roll a d6 dice (from 1 to 6)
 		int roll = random.nextInt(6) + 1;
 		int lastPosition = tiles.size() - 1;
 		System.out.println(player.name + " rolls a " + Integer.toString(roll));
 
+		// Return the correct new position if the player rolls past the
+		// last tile.
 		if (roll + player.position > lastPosition) {
 			return roll - (lastPosition - player.position) - 1;
 		}
+		// Else, just return the new position.
 		return roll + player.position;
 	}
 
@@ -194,13 +204,15 @@ class LTUMonopoly extends AbstractMonopoly {
 		destinationTile.playerArr.add(player);
 		System.out.println(player.name + " moves to " + destinationTile.tileName);
 
-
+		// Increas or decreas player's money (study-time) accordingly;
 		player.money += destinationTile.reward;
 		// Increase or decrease your knowledge accordingly.
 		player.knowledge += destinationTile.knowledge;
 		// Pay any costs involved in arriving to the tile (e.g. PARTY)
 		player.money -= destinationTile.penalty;
 
+		// Check if the tile has any special feature, in that case
+		// execute it and move to the next tile if the feature requests it.
 		if (destinationTile.tileFeature != null) {
 			Optional<Integer> newPositionFromCard = destinationTile.tileFeature.run(player);
 			newPositionFromCard.ifPresent(nPos -> movePlayer(player, nPos));
@@ -213,9 +225,11 @@ class LTUMonopoly extends AbstractMonopoly {
 		}
 	}
 
+	// Method for removing a player from a tile.
 	private void removePlayerFromTile (Player player) {
 		ArrayList<Tile> tiles = tilesObject.tiles;
 		ListIterator tilesIterator = tiles.listIterator();
+
 		while (tilesIterator.hasNext()) {
 			Tile tile = (Tile) tilesIterator.next();
 			ListIterator playerIterator = tile.playerArr.listIterator();
@@ -228,10 +242,13 @@ class LTUMonopoly extends AbstractMonopoly {
 		}
 	}
 
+	// Method for removing a player from the game when the player
+	// lost.
 	private void removePlayerFromGame (Player player) {
 		removePlayerFromTile(player);
 		player.setStillPlaying(false);
 		ListIterator tilesIterator = tiles.listIterator();
+
 		while (tilesIterator.hasNext()) {
 			Tile tile = (Tile) tilesIterator.next();
 			if (tile.owner == player) {

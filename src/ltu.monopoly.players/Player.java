@@ -1,6 +1,8 @@
 package ltu.monopoly.players;
 import java.util.ArrayList;
 
+// In the LTU monopoly we use knowledge, so add it to the player class
+// which extends the AbstractPlayer class.
 public class Player extends AbstractPlayer {
   public int knowledge = 0;
 

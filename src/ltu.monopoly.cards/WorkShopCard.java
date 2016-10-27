@@ -20,9 +20,11 @@ public class WorkShopCard extends AbstractChanceCard {
     Tile a209 = tiles.get(a209Index);
     Tile a210 = tiles.get(a210Index);
 
+    // Force change the ownership of A209 and A210 to the player.
     a209.owner = player;
     a210.owner = player;
 
+    // Return the position of A209.
 		return Optional.of(new Integer(a209Index));
 
   }

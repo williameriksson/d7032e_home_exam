@@ -4,22 +4,34 @@ import java.util.Collections;
 import java.lang.Math.*;
 import ltu.monopoly.players.Player;
 
+
+// This class prints the game state. It will automatically adapt to the
+// number of tiles supplied. If one would like to modify the layout of the
+// board, specify the "nrHorizTiles" and the "nrMiddleRows" manually and
+// delete the automatic functionality supplied in the constructor. Be aware
+// of that it has to match the number of tiles in that case.
+// nrHorizTiles = the amount of tiles on the top or the bot row where nr of bot tiles
+// equals nr of top tiles.
+// nrMiddleRows = the amount of middle rows, not the amount of middle tiles in total.
+
 public class GameBoard {
   private ArrayList<Tile> tiles;
   private int nrOfTiles;
   private int nrHorizTiles;
   private int nrMiddleRows;
-  private final int TILEHEIGHT = 5;
-  private final int TILEWIDTH = 9;
+  private final int TILEHEIGHT = 5; // Set the desired inner tile height.
+  private final int TILEWIDTH = 9; // Set the desired inner tile width.
   private String border;
 
   public GameBoard (ArrayList<Tile> tiles) {
 
+    // The number of tiles should be even so we can get a good game board.
     if ((tiles.size() % 2) != 0) {
       System.out.println("The number of tiles must be even.");
       System.exit(0);
     }
 
+    // Atleast 4 tiles should be added, not much of a game otherwise, is it?
     if (tiles.size() < 4) {
       System.out.println("Please add atleast 4 tiles.");
       System.exit(0);
@@ -27,41 +39,28 @@ public class GameBoard {
 
     nrOfTiles = tiles.size();
 
+    // The base case is 4 tiles which results in
+    // 2 horizontal tiles both at the top and the bottom, and 0 middle rows.
+    nrHorizTiles = 2;
+    nrMiddleRows = 0;
 
-      nrHorizTiles = 2;
-      nrMiddleRows = 0;
-      boolean s = true;
-      for (int i = 6; i <= nrOfTiles; i += 2) {
-        if (s) {
-          nrHorizTiles++;
-        } else {
-          nrMiddleRows++;
-        }
-        s = !s;
+    // Iteratively increment the number of horizontal tiles and
+    // the number of middlerows, where the horizontal and middlerows
+    // takes turns to be incremented.
+    boolean s = true;
+    for (int i = 6; i <= nrOfTiles; i += 2) {
+      if (s) {
+        nrHorizTiles++;
+      } else {
+        nrMiddleRows++;
       }
+      s = !s;
+    }
 
-
-    // if (nrOfTiles == 4) {
-    //   nrHorizTiles = 2;
-    //   nrMiddleRows = 0;
-    // } else {
-    //   nrHorizTiles = 3;
-    //   nrMiddleRows = 0;
-    //   boolean s = true;
-    //   for (int i = 8; i <= nrOfTiles; i += 2) {
-    //     if (s) {
-    //       nrMiddleRows++;
-    //     } else {
-    //       nrHorizTiles++;
-    //     }
-    //     s = !s;
-    //   }
-    //
-    // }
-    // System.out.println(nrHorizTiles);
-    // System.out.println(nrMiddleRows);
-    // TODO: make nrHorizTiles and nrMiddleRows automatic.
     this.tiles = tiles;
+
+    // Create a border that will be used for the top and bottom tiles,
+    // depending on the specified tilewidth and the number of tiles.
     border = new String(new char[TILEWIDTH * nrHorizTiles + nrHorizTiles + 1]).replace("\0", "*") + "\n";
 
   }
@@ -97,7 +96,7 @@ public class GameBoard {
     ***************************************************
 
     Currency: Study-time (Time is money)
-    START: Collect 40
+    START: Collect 2, if you end up on or pass START.
     StiL/Philm: Go to the gym/cinema [buy: 6, rent 2]
     CHANCE: Draw a CHANCE card
     PARTY: Have a huge party [pay: 18, Decrease knowledge by 8]
@@ -149,6 +148,7 @@ public class GameBoard {
 
   }
 
+  // Prints a top or a bot row.
   private void printFullTileRow (ArrayList<Tile> tileArr) {
     String emptyTile = "*" + new String(new char[TILEWIDTH]).replace("\0", " ");
 
@@ -195,6 +195,7 @@ public class GameBoard {
     }
   }
 
+  // Prints a middle row.
   private void printMiddleTileRow(ArrayList<Tile> tileArr, boolean lastMidTiles) {
     String emptyTile = "*" + new String(new char[TILEWIDTH]).replace("\0", " ");
     String bottomOfTile = new String(new char[TILEWIDTH + 2]).replace("\0", "*");
@@ -258,9 +259,10 @@ public class GameBoard {
       }
 
     }
+      // If it is the last middle row, print the full border.
       if (lastMidTiles) {
         System.out.print(border);
-      } else {
+      } else { // else print a border only for the tiles on the row.
         System.out.print(bottomOfTile);
         System.out.print(middleSpace);
         System.out.print(bottomOfTile + "\n");
