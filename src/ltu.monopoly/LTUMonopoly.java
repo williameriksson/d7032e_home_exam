@@ -8,6 +8,9 @@ import ltu.monopoly.players.Player;
 import ltu.monopoly.gameboard.Tile;
 import ltu.monopoly.gameboard.GameBoard;
 
+// This class is the game engine. It handles the player moves, the consequences
+// of stepping on tiles, buying tiles, removing players that lost from the
+// game etc.
 
 class LTUMonopoly extends AbstractMonopoly {
 
@@ -64,8 +67,8 @@ class LTUMonopoly extends AbstractMonopoly {
 		// The player is currently on the EXAM tile but had not studied enough (knowledge <= 200) - skip one turn
 		// Or, the player is cramming for the exam in the Library (result of a Chance card)
 		// Or, the player has passed out after a serious party (result of a Chance card)
-		if(player.skipOneTurn) {
-			player.skipOneTurn = false;
+		if(player.skipTurns > 0) {
+			player.skipTurns--;
 			System.out.println(player.name + " skips one turn");
 			return;
 		}
@@ -110,7 +113,7 @@ class LTUMonopoly extends AbstractMonopoly {
 	protected void printInstructions() {
 		System.out.println("Currency: Study-time (Time is money, start with 200)");
 		System.out.println("Tiles:");
-		System.out.println("\tSTART: Collect 2");
+		System.out.println("\tSTART: Collect 2 if you end up or passes START.");
 		System.out.println("\tStiL/Philm: Go to the gym/cinema [buy: 6, rent 2]");
 		System.out.println("\tCHANCE: Draw a CHANCE card");
 		System.out.println("\tPARTY: Have a huge party [pay: 18, Decrease knowledge by 8]");

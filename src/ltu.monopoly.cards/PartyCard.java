@@ -16,7 +16,7 @@ public class PartyCard extends AbstractChanceCard {
                         player.name + " moves to PARTY, pays the costs, decreases knowledge, and skips one turn");
 
     int partyPosition = getTileIndexByName("PARTY");
-    player.skipOneTurn = true;
+    player.skipTurns++;
 
 		return Optional.of(new Integer(partyPosition));
 

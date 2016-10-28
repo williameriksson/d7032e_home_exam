@@ -16,7 +16,7 @@ public class VerbalExamCard extends AbstractChanceCard {
 
     int examPosition = getTileIndexByName("EXAM");
     Tile examTile = tiles.get(examPosition);
-    player.skipOneTurn = false;
+    player.skipTurns--;
 
     // Return the position of the Exam tile.
 		return Optional.of(new Integer(examPosition));

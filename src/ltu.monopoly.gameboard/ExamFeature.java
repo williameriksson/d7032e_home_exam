@@ -13,7 +13,7 @@ public class ExamFeature implements InterfaceTileFeature {
       System.exit(0);
     } else {
       System.out.println(player.name + " had not studied enough for the exam and have to take a re-exam.");
-      player.skipOneTurn = true;
+      player.skipTurns++;
     }
     // This feature does not move the player, so return Optional.empty();
     return Optional.empty();
