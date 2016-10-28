@@ -18,7 +18,7 @@ public class LibraryCard extends AbstractChanceCard {
     Tile libraryTile = tiles.get(libraryPosition);
 
 		player.knowledge += 4 * libraryTile.knowledge;
-		player.skipOneTurn = true;
+		player.skipTurns++;
 		return Optional.of(new Integer(libraryPosition));
 
   }

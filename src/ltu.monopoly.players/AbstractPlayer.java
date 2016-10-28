@@ -9,7 +9,7 @@ public abstract class AbstractPlayer {
   public int money = 200;
   public boolean computer = false;
   public boolean stillPlaying = true;
-  public boolean skipOneTurn = false;
+  public int skipTurns = 0;
 
   public AbstractPlayer(String name) {
     //Add spaces to make the gameboard printout pretty
