@@ -8,6 +8,9 @@ import ltu.monopoly.players.Player;
 import ltu.monopoly.gameboard.Tile;
 import ltu.monopoly.gameboard.GameBoard;
 
+// This class is the game engine. It handles the player moves, the consequences
+// of stepping on tiles, buying tiles, removing players that lost from the
+// game etc.
 
 class LTUMonopoly extends AbstractMonopoly {
 
