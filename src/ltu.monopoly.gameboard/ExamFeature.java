@@ -3,6 +3,7 @@ package ltu.monopoly.gameboard;
 import java.util.Optional;
 import ltu.monopoly.players.Player;
 
+// The special feature for the EXAM tile.
 public class ExamFeature implements InterfaceTileFeature {
 
   @Override

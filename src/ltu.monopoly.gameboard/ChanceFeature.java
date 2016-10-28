@@ -4,6 +4,7 @@ import java.util.Optional;
 import ltu.monopoly.players.Player;
 import ltu.monopoly.cards.ChanceCards;
 
+// The special feature for the CHANCE tiles.
 public class ChanceFeature implements InterfaceTileFeature {
   ChanceCards cards;
   public ChanceFeature (ChanceCards cards) {
